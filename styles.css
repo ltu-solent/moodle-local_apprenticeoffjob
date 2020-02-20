@@ -1,0 +1,9 @@
+.activityheader{
+  font-weight: bold;
+  background-color: #999 !important;
+  color: #fff;
+}
+
+.cell-align-right {
+    text-align: right;
+}
