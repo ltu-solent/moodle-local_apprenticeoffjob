@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display a user grade report for all courses
+ * Student data entry point for apprentice off job hours
  *
  * @package    local
  * @subpackage apprenticeoffjob
- * @copyright  2019 onwards Solent University
+ * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -53,9 +53,9 @@ echo $OUTPUT->header();
 $url = new moodle_url('activity.php');
 echo html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary"]);
 
-$activities = get_activities();
+$activities = get_user_activities();
 $totalhours = 0;
-$expectedhours = 200;
+$expectedhours = get_expected_hours();
 foreach($activities as $activity=>$value) {
   $totalhours = $totalhours + $value->activityhours;
 }

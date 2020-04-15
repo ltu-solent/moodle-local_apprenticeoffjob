@@ -27,29 +27,51 @@ defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
 function get_activities(){
   global $DB, $USER;
-  $activities = $DB->get_records('local_apprenticeoffjob', array('userid'=>$USER->id), 'activitytype');
+  $activities = $DB->get_records('local_apprenticeactivities');
   return $activities;
+}
+
+function get_user_activities(){
+  global $DB, $USER;
+  $activities = $DB->get_records_sql('SELECT a.*, aa.activityname FROM {local_apprentice} a
+                                      JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
+                                      WHERE a.userid = ?
+                                      ORDER BY ?', array($USER->id,'activitytype'));
+  return $activities;
+}
+
+function get_expected_hours(){
+  global $DB, $USER;
+  $dbman = $DB->get_manager();
+  $hours = 0;
+  if($dbman->table_exists('report_apprentice')){
+    $hours = $DB->get_record_sql('SELECT SUM(hours) hours
+                                    FROM {report_apprentice}
+                                    WHERE studentid = ?',
+                                    array($USER->id));
+    return $hours->hours;
+  }else{
+    return $hours->hours;
+  }
 }
 
 function save_activity($formdata){
   global $DB, $USER;
-
   $activity = new stdClass();
   $activity->userid = $USER->id;
-  $activity->activitytype = $formdata->activitytype;
+  $activity->activitytype = intval($formdata->activitytype);
   $activity->activitydate = $formdata->activitydate;
   $activity->activitydetails = $formdata->activitydetails;
   $activity->activityhours = $formdata->activityhours;
-
   $date = new DateTime("now", core_date::get_user_timezone_object());
   $date->setTime(0, 0, 0);
   $activity->timecreated = $date->getTimestamp();
 
   if($formdata->activityupdate == 1){
     $activity->id = $formdata->id;
-    $activityid = $DB->update_record('local_apprenticeoffjob', $activity, true);
+    $activityid = $DB->update_record('local_apprentice', $activity, true);
   }else{
-    $activityid = $DB->insert_record('local_apprenticeoffjob', $activity, true);
+    $activityid = $DB->insert_record('local_apprentice', $activity, true);
   }
   return $activityid;
 }
@@ -61,7 +83,7 @@ function activities_table($activities){
   foreach ($activities as $k => $v) {
     $activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
     if(!in_array($v->activitytype, $activitytypes)){
-      $activitytypes[] = $v->activitytype;
+      $activitytypes[] = $v->activityname;
     }
   }
 
@@ -74,7 +96,7 @@ function activities_table($activities){
   foreach($activitytypes as $type => $v){
     $row = new html_table_row();
     $row->attributes['class'] = 'activityheader';
-    $cell1 = new html_table_cell(get_string($v, 'local_apprenticeoffjob'));
+    $cell1 = new html_table_cell($v);
     $cell1->colspan = 2;
     $cell2 = new html_table_cell($activityhours[$v]->activityhours);
     $cell3 = new html_table_cell();
@@ -82,7 +104,7 @@ function activities_table($activities){
     $table->data[] = $row;
 
     foreach ($activities as $activity) {
-      if($activity->activitytype == $v){
+      if($activity->activityname == $v){
         $completedhours = $completedhours + $activity->activityhours;
         $row = new html_table_row();
         $time = new DateTime('now', core_date::get_user_timezone_object());
@@ -116,6 +138,6 @@ function activities_table($activities){
 
 function delete_activity($formdata){
   global $DB, $USER;
-  $deleted = $DB->delete_records('local_apprenticeoffjob', array('id'=>$formdata->id));
+  $deleted = $DB->delete_records('local_apprentice', array('id'=>$formdata->id));
   return $deleted;
 }

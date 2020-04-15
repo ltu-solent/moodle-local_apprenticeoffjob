@@ -45,7 +45,7 @@ $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string
 echo $OUTPUT->header();
 $activityid = $_GET['id'];
 
-$activity = $DB->get_record('local_apprenticeoffjob', array('id'=>$activityid));
+$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
 
 //if($USER->id == $activity->userid){
   $editform = new activity();
@@ -53,7 +53,6 @@ $activity = $DB->get_record('local_apprenticeoffjob', array('id'=>$activityid));
                     'activitytype' => $activity->activitytype,
                     'activitydate' => $activity->activitydate,
                     'activitydetails' => $activity->activitydetails,
-                    'activityhours' => $activity->activityhours,
                     'activityhours' => $activity->activityhours,
                     'activityupdate' => 1
                     );

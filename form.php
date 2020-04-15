@@ -8,19 +8,15 @@ class activity extends moodleform {
 
 		$mform = $this->_form;
 
-    $activitytypes = array(
-    'activity1' => get_string('activity1', 'local_apprenticeoffjob'),
-    'activity2' => get_string('activity2', 'local_apprenticeoffjob'),
-    'activity3' => get_string('activity3', 'local_apprenticeoffjob'),
-    'activity4' => get_string('activity4', 'local_apprenticeoffjob'),
-    'activity5' => get_string('activity5', 'local_apprenticeoffjob'),
-    'activity6' => get_string('activity6', 'local_apprenticeoffjob'),
-    'activity7' => get_string('activity7', 'local_apprenticeoffjob'),
-    'activity8' => get_string('activity8', 'local_apprenticeoffjob')
-		);
-		$mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $activitytypes);
-    $mform->setType('activitytype', PARAM_TEXT);
-		$mform->addElement('date_time_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
+		$activitytypes = get_activities();
+		$options =array();
+		foreach ($activitytypes as $type => $value) {
+			$options[$value->id] = $value->activityname;
+		}
+
+		$mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $options);
+    $mform->setType('activitytype', PARAM_INT);
+		$mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
     $mform->setType('activitydate', PARAM_INT);
 		$mform->addElement('text', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'));
     $mform->setType('activitydetails', PARAM_TEXT );

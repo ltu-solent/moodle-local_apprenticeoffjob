@@ -4,20 +4,30 @@
     xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="local_apprenticeoffjob" COMMENT="Logs for apprentice off job activities">
+    <TABLE NAME="local_apprentice" COMMENT="Logs for apprentice off job activities">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="activitytype" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="activitydate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The id of the group submission, 0 if not a group submission"/>
-        <FIELD NAME="activitydetails" TYPE="text" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The id of the student that has submitted the assignment0."/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ID of the user."/>
+        <FIELD NAME="activitytype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ID of the activity."/>
+        <FIELD NAME="activitydate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The date the activity was completed."/>
+        <FIELD NAME="activitydetails" TYPE="text" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Details of the activity."/>
         <FIELD NAME="activityhours" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="2" COMMENT="Number of hours completed."/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The unique hash to use as the barcode for the submission."/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The id of the course module."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the record was created."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The time the record was updated."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this activity."/>
-        <KEY NAME="assignmentid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="The user the activity relates to."/>
+        <KEY NAME="activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="local_apprenticeoffjob_activities" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_apprenticeactivities" COMMENT="Activities for apprentice off job log">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="activityname" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this activity."/>
       </KEYS>
     </TABLE>
   </TABLES>
