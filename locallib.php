@@ -82,10 +82,10 @@ function activities_table($activities){
   $activityhours = array();
   foreach ($activities as $k => $v) {
     $activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
-    if(!in_array($v->activitytype, $activitytypes)){
-      $activitytypes[] = $v->activityname;
-    }
+    $activitytypes[] = $v->activityname;
   }
+
+  $activitytypes = array_unique($activitytypes);
 
   $table = new html_table();
   $table->attributes['class'] = 'generaltable boxaligncenter';
@@ -113,7 +113,7 @@ function activities_table($activities){
         $dst = dst_offset_on($activity->activitydate, $timezone);
         $activitydate = $time - $dst;
 
-        $cell1 = new html_table_cell(userdate($activity->activitydate));
+        $cell1 = new html_table_cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
         $cell2 = new html_table_cell($activity->activitydetails);
         $cell3 = new html_table_cell($activity->activityhours);
         $params = ['id'=> $activity->id];
@@ -140,4 +140,15 @@ function delete_activity($formdata){
   global $DB, $USER;
   $deleted = $DB->delete_records('local_apprentice', array('id'=>$formdata->id));
   return $deleted;
+}
+
+function format_date($activitydate){
+
+  $date = new DateTime();
+  $date = DateTime::createFromFormat('U', $activitydate);
+  $timezone = core_date::get_user_timezone($date);
+  date_default_timezone_set($timezone);
+  $date = userdate($activitydate, get_string('strftimedaydate', 'langconfig'));
+
+  return $date;
 }

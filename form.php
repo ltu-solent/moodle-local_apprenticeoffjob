@@ -21,7 +21,8 @@ class activity extends moodleform {
 		$mform->addElement('text', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'));
     $mform->setType('activitydetails', PARAM_TEXT );
 		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
-    $mform->setType('activityhours', PARAM_FLOAT);
+    $mform->setType('activityhours', PARAM_RAW);
+		$mform->addRule('activityhours', get_string('err_numeric', 'report_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
     $mform->addElement('hidden', 'id', '');
 		$mform->setType('id', PARAM_INT);
     $mform->addElement('hidden', 'activityupdate', '');
@@ -29,6 +30,11 @@ class activity extends moodleform {
 
     $this->add_action_buttons();
 	}
+
+	public function validation($data, $files) {
+			$errors = parent::validation($data, $files);
+      return $errors;
+  }
 }
 
 class deleteform extends moodleform {
@@ -46,4 +52,3 @@ class deleteform extends moodleform {
     $this->add_action_buttons(true, get_string('buttonyes', 'local_apprenticeoffjob'));
 	}
 }
-?>

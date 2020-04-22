@@ -17,13 +17,13 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this activity."/>
-        <KEY NAME="activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="local_apprenticeoffjob_activities" REFFIELDS="id"/>
+        <KEY NAME="activitytype" TYPE="foreign" FIELDS="activitytype" REFTABLE="local_apprenticeoffjob_activities" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="local_apprenticeactivities" COMMENT="Activities for apprentice off job log">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-        <FIELD NAME="activityname" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="activityname" TYPE="text" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
       </FIELDS>
       <KEYS>

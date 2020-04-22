@@ -45,7 +45,7 @@ $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string
 echo $OUTPUT->header();
 $activityid = $_GET['id'];
 $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
-
+$activity->activitydate = format_date($activity->activitydate);
 // //if($USER->id == $activity->userid){
    $deleteform = new deleteform(null, array('activity' => $activity));
    $formdata = array('id' => $activity->id);
