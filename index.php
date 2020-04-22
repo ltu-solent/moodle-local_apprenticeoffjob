@@ -25,13 +25,14 @@
 
 require('../../config.php');
 require_once('locallib.php');
+require_once('lib.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/apprenticeoffjob/index.php');
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 
-global $PAGE, $USER;
+global $PAGE, $USER, $DB;
 // Trigger an grade report viewed event.
 // $event = \report_feedbackdashboard\event\feedbackdashboard_report_viewed::create(array(
 //             'context' => context_user::instance($USER->id),
@@ -64,6 +65,19 @@ echo get_string('totalhours', 'local_apprenticeoffjob');
 echo get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours]);
 echo get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalhours]);
 echo get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
+
+$filename = get_filename(130);
+//$url = file_rewrite_pluginfile_urls($filename, 'pluginfile.php', 130, 'report_apprenticeoffjob', 'apprenticeoffjob', null);
+$url= moodle_url::make_pluginfile_url(130,'report_apprenticeoffjob','apprenticeoffjob',0,'/',$filename);
+//$url = $CFG->wwwroot. '/pluginfile.php/130/report_apprenticeoffjob/apprenticeoffjob/0/'. $filename . '?forcedownload=1';
+echo $url;
+//$url = moodle_url::make_pluginfile_url(130, $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), false);
+//$filename = get_filename(130);
+//$url = moodle_url::make_pluginfile_url(null, null, 130, 'report_apprenticeoffjob', 'apprenticeoffjob', 0, '/', $filename, false);
+//$deletebutton = html_writer::start_tag('a', array('href'=>$url, 'class' => 'btn btn-secondary'));
+echo '<a href="'.$url.'">Commitment statement</a>';
+
+//echo $url;
 
 echo get_string('completedhoursbreakdown', 'local_apprenticeoffjob');
 echo activities_table($activities);

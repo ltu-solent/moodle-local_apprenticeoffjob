@@ -152,3 +152,10 @@ function format_date($activitydate){
 
   return $date;
 }
+
+function get_filename($contextid){
+  global $DB;
+  $filename = $DB->get_record('files', ['contextid'=>$contextid, 'filearea'=>'apprenticeoffjob'], 'filename');
+
+  return $filename->filename;
+}
