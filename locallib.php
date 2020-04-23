@@ -34,13 +34,15 @@ function get_activities(){
 function get_user_activities(){
   global $DB, $USER;
   if(get_expected_hours() == null){
-    $activities = $DB->get_records_sql('SELECT a.*, aa.activityname
+    $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
+                                        a.id activityid, a.activitydate, a.activitydetails, a.activityhours, aa.activityname
                                         FROM {local_apprentice} a
                                         JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
                                         WHERE a.userid = ?
                                         ORDER BY ?', array($USER->id,'activitytype'));
   }else{
-    $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id, a.activitydate, a.activitydetails, a.activityhours, r.id activityid, aa.activityname
+    $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
+                                          a.id activityid, a.activitydate, a.activitydetails, a.activityhours, aa.activityname
                                           FROM {report_apprentice} r
                                           JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
                                           LEFT JOIN {local_apprentice} a ON a.activitytype = r.activityid
@@ -83,12 +85,14 @@ function save_activity($formdata){
   $activity->activityhours = $formdata->activityhours;
   $date = new DateTime("now", core_date::get_user_timezone_object());
   $date->setTime(0, 0, 0);
-  $activity->timecreated = $date->getTimestamp();
+
 
   if($formdata->activityupdate == 1){
     $activity->id = $formdata->id;
+    $activity->timemodified = $date->getTimestamp();
     $activityid = $DB->update_record('local_apprentice', $activity, true);
   }else{
+    $activity->timecreated = $date->getTimestamp();
     $activityid = $DB->insert_record('local_apprentice', $activity, true);
   }
   return $activityid;
@@ -182,7 +186,7 @@ function activity_row($activity, $v, $completedhours){
       $cell2 = new html_table_cell($activity->activitydetails);
       $cell3 = new html_table_cell($activity->activityhours);
       $cell3->attributes['class'] = 'cell-align-right';
-      $params = ['id'=> $activity->id];
+      $params = ['id'=> $activity->activityid];
       $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
       $editbutton = html_writer::start_tag('a', array('href'=>$editurl, 'class' => 'btn btn-secondary'));
       $editbutton .= get_string('edit', 'local_apprenticeoffjob');
