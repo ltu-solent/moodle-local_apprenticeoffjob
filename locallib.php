@@ -35,14 +35,14 @@ function get_user_activities(){
   global $DB, $USER;
   if(get_expected_hours() == null){
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                        a.id activityid, a.activitydate, a.activitydetails, a.activityhours, aa.activityname
+                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname
                                         FROM {local_apprentice} a
                                         JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
                                         WHERE a.userid = ?
                                         ORDER BY ?', array($USER->id,'activitytype'));
   }else{
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                          a.id activityid, a.activitydate, a.activitydetails, a.activityhours, aa.activityname
+                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname
                                           FROM {report_apprentice} r
                                           JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
                                           LEFT JOIN {local_apprentice} a ON a.activitytype = r.activityid
@@ -102,10 +102,11 @@ function activities_table($activities){
   $completedhours = 0.00;
   $activitytypes = array();
   $activityhours = array();
+  $expectedhours = get_expected_hours();
 
   foreach ($activities as $k => $v) {
     $activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
-    $activitytypes[] = $v->activityname;
+    $activitytypes[$v->activitytype] = $v->activityname;
   }
 
   $activitytypes = array_unique($activitytypes);
@@ -123,8 +124,13 @@ function activities_table($activities){
     $row->attributes['class'] = 'activityheader';
     $cell1 = new html_table_cell($v);
     $cell1->colspan = 2;
-    //$cell2 = new html_table_cell($activityhours[$v]->activityhours);
-    $cell2 = new html_table_cell('1/2');
+
+    $activitycompletedhours = activity_completed_hours($activities, $type);
+    if($expectedhours){
+      $cell2 = new html_table_cell($activitycompletedhours. '/' . $expectedhours[$type]);
+    }else{
+      $cell2 = new html_table_cell();
+    }
     $cell2->attributes['class'] = 'cell-align-right';
     $cell3 = new html_table_cell();
     $row->cells = array($cell1, $cell2, $cell3);
@@ -202,4 +208,14 @@ function activity_row($activity, $v, $completedhours){
 
       return $row;
   }
+}
+
+function activity_completed_hours($activities, $type){
+  $activitycompletedhours = 0;
+  foreach ($activities as $activity) {
+    if($activity->activitytype == $type){
+      $activitycompletedhours = $activitycompletedhours + $activity->activityhours;
+    }
+  }
+  return $activitycompletedhours;
 }
