@@ -55,16 +55,21 @@ $url = new moodle_url('activity.php');
 echo html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary"]);
 
 $activities = get_user_activities();
-$totalhours = 0;
 $expectedhours = get_expected_hours();
+$totalhours = 0;
+
 foreach($activities as $activity=>$value) {
   $totalhours = $totalhours + $value->activityhours;
 }
-$hoursleft = $expectedhours - $totalhours;
+
+$hoursleft = $expectedhours['totalhours'] - $totalhours;
 echo get_string('totalhours', 'local_apprenticeoffjob');
-echo get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours]);
 echo get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalhours]);
-echo get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
+
+if($expectedhours != null){
+  echo get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours['totalhours']]);
+  echo get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
+}
 
 $filename = get_filename(130);
 //$url = file_rewrite_pluginfile_urls($filename, 'pluginfile.php', 130, 'report_apprenticeoffjob', 'apprenticeoffjob', null);
