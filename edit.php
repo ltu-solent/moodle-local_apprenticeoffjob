@@ -50,10 +50,12 @@ $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
 //if($USER->id == $activity->userid){
   $editform = new activity();
   $formdata = array('id' => $activity->id,
+                    'course' => $activity->course,
                     'activitytype' => $activity->activitytype,
                     'activitydate' => $activity->activitydate,
                     'activitydetails' => $activity->activitydetails,
                     'activityhours' => $activity->activityhours,
+                    'confirm' => $activity->confirm,
                     'activityupdate' => 1
                     );
   $editform->set_data($formdata);

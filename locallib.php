@@ -35,14 +35,14 @@ function get_user_activities(){
   global $DB, $USER;
   if(get_expected_hours() == null){
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname
+                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, a.confirm, aa.activityname
                                         FROM {local_apprentice} a
                                         JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
                                         WHERE a.userid = ?
                                         ORDER BY ?', array($USER->id,'activitytype'));
   }else{
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname
+                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, a.confirm, aa.activityname
                                           FROM {report_apprentice} r
                                           JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
                                           LEFT JOIN {local_apprentice} a ON a.activitytype = r.activityid
@@ -79,10 +79,12 @@ function save_activity($formdata){
   global $DB, $USER;
   $activity = new stdClass();
   $activity->userid = $USER->id;
+  $activity->course = $formdata->course;
   $activity->activitytype = intval($formdata->activitytype);
   $activity->activitydate = $formdata->activitydate;
   $activity->activitydetails = $formdata->activitydetails;
   $activity->activityhours = $formdata->activityhours;
+  $activity->confirm = $formdata->confirm;
   $date = new DateTime("now", core_date::get_user_timezone_object());
   $date->setTime(0, 0, 0);
 
@@ -211,11 +213,28 @@ function activity_row($activity, $v, $completedhours){
 }
 
 function activity_completed_hours($activities, $type){
+
   $activitycompletedhours = 0;
   foreach ($activities as $activity) {
+    //if($activity->activitytype == $type && $activity->confirm == 1){
     if($activity->activitytype == $type){
       $activitycompletedhours = $activitycompletedhours + $activity->activityhours;
     }
   }
   return $activitycompletedhours;
+}
+
+function get_apprentice_courses(){
+  global $DB, $USER;
+
+  $courses = $DB->get_records_sql("SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
+                                  FROM {enrol} e
+                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = ?
+                                  JOIN {course} c ON c.id = e.courseid
+                                  JOIN {course_categories} cc ON cc.id = c.category
+                                  WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
+                                  AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP())
+                                  AND ue.userid = ?
+                                  AND cc.name ='Course pages' OR cc.name = 'unit pages'" , array($USER->id, $USER->id));
+  return $courses;
 }

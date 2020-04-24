@@ -8,13 +8,22 @@ class activity extends moodleform {
 
 		$mform = $this->_form;
 
-		$activitytypes = get_activities();
-		$options =array();
-		foreach ($activitytypes as $type => $value) {
-			$options[$value->id] = $value->activityname;
+		$courses = get_apprentice_courses();
+
+		$courseoptions = array();
+		foreach($courses as $course => $c){
+			$courseoptions[$c->courseid] = $c->fullname;
 		}
 
-		$mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $options);
+		$activitytypes = get_activities();
+		$activityoptions =array();
+		foreach ($activitytypes as $type => $value) {
+			$activityoptions[$value->id] = $value->activityname;
+		}
+
+		$mform->addElement('select', 'course', get_string('course',  'local_apprenticeoffjob'), $courseoptions);
+    $mform->setType('course', PARAM_INT);
+		$mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $activityoptions);
     $mform->setType('activitytype', PARAM_INT);
 		$mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
     $mform->setType('activitydate', PARAM_INT);
@@ -23,7 +32,9 @@ class activity extends moodleform {
 		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
     $mform->setType('activityhours', PARAM_RAW);
 		$mform->addRule('activityhours', get_string('err_numeric', 'report_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
-    $mform->addElement('hidden', 'id', '');
+		$mform->addElement('advcheckbox', 'confirm', '', get_string('confirm', 'local_apprenticeoffjob'), array('group' => 1), array(0, 1));
+		$mform->setType('confirm', PARAM_INT);
+		$mform->addElement('hidden', 'id', '');
 		$mform->setType('id', PARAM_INT);
     $mform->addElement('hidden', 'activityupdate', '');
 		$mform->setType('activityupdate', PARAM_INT);
