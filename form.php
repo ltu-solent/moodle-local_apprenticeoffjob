@@ -32,8 +32,6 @@ class activity extends moodleform {
 		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
     $mform->setType('activityhours', PARAM_RAW);
 		$mform->addRule('activityhours', get_string('err_numeric', 'report_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
-		$mform->addElement('advcheckbox', 'confirm', '', get_string('confirm', 'local_apprenticeoffjob'), array('group' => 1), array(0, 1));
-		$mform->setType('confirm', PARAM_INT);
 		$mform->addElement('hidden', 'id', '');
 		$mform->setType('id', PARAM_INT);
     $mform->addElement('hidden', 'activityupdate', '');

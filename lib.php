@@ -38,16 +38,16 @@ defined('MOODLE_INTERNAL') || die();
  * @param array $options additional options affecting the file serving
  * @return void The file is sent along with it's headers
  */
-function apprenticeoffjob_pluginfile($course, $cm, $context, $filearea, $filename, $forcedownload, array $options = array()) {
-//var_dump($args);die();
-    // if ($context->contextlevel != CONTEXT_SYSTEM) {
-    //     send_file_not_found();
-    // }
-
-    $fs = get_file_storage();
-    $file = $fs->get_file($context, $filearea, 'apprenticeoffjob', null, '/', $filename);
-
-    // Send the file, always forcing download, we don't want options.
-    \core\session\manager::write_close();
-    send_stored_file($file, 0, 0, true);
-}
+// function apprenticeoffjob_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+// var_dump($context);die();
+//     if ($context->contextlevel != CONTEXT_USER) {
+//         send_file_not_found();
+//     }
+//
+//     $fs = get_file_storage();
+//     $file = $fs->get_file($context, $filearea, 'apprenticeoffjob', null, '/', $filename);
+//
+//     // Send the file, always forcing download, we don't want options.
+//     \core\session\manager::write_close();
+//     send_stored_file($file, 0, 0, true);
+// }

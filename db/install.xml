@@ -13,7 +13,6 @@
         <FIELD NAME="activitydate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The date the activity was completed."/>
         <FIELD NAME="activitydetails" TYPE="text" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Details of the activity."/>
         <FIELD NAME="activityhours" TYPE="number" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="2" COMMENT="Number of hours completed."/>
-        <FIELD NAME="confirm" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Number of hours completed."/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the record was created."/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The time the record was updated."/>
       </FIELDS>

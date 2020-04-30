@@ -35,14 +35,14 @@ function get_user_activities(){
   global $DB, $USER;
   if(get_expected_hours() == null){
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, a.confirm, aa.activityname
+                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname
                                         FROM {local_apprentice} a
                                         JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
                                         WHERE a.userid = ?
                                         ORDER BY ?', array($USER->id,'activitytype'));
   }else{
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, a.confirm, aa.activityname
+                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname
                                           FROM {report_apprentice} r
                                           JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
                                           LEFT JOIN {local_apprentice} a ON a.activitytype = r.activityid
@@ -84,7 +84,6 @@ function save_activity($formdata){
   $activity->activitydate = $formdata->activitydate;
   $activity->activitydetails = $formdata->activitydetails;
   $activity->activityhours = $formdata->activityhours;
-  $activity->confirm = $formdata->confirm;
   $date = new DateTime("now", core_date::get_user_timezone_object());
   $date->setTime(0, 0, 0);
 
@@ -216,7 +215,6 @@ function activity_completed_hours($activities, $type){
 
   $activitycompletedhours = 0;
   foreach ($activities as $activity) {
-    //if($activity->activitytype == $type && $activity->confirm == 1){
     if($activity->activitytype == $type){
       $activitycompletedhours = $activitycompletedhours + $activity->activityhours;
     }
