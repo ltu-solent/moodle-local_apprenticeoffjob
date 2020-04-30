@@ -102,14 +102,19 @@ function save_activity($formdata){
 function activities_table($activities){
   $completedhours = 0.00;
   $activitytypes = array();
-  $activityhours = array();
+  //$activityhours = array();
   $expectedhours = get_expected_hours();
-
+//var_dump($activityhours);
   foreach ($activities as $k => $v) {
-    $activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
+    //var_dump();
+    //$newhours = $activityhours[$v->activitytype]['activityhours'];
+    //var_dump($newhours);
+    //$activityhours[$v->activitytype]['activityhours'] = $new_input['name'];
+    //$activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
+    //$activityhours[$v->activitytype]['activityhours'] += sprintf("%02.2f", $v->activityhours);
     $activitytypes[$v->activitytype] = $v->activityname;
   }
-
+//var_dump($activityhours);
   $activitytypes = array_unique($activitytypes);
 
   // Main header row
@@ -186,8 +191,7 @@ function activity_row($activity, $v, $completedhours){
       $time = new DateTime('now', core_date::get_user_timezone_object());
       $time = DateTime::createFromFormat('U', $activity->activitydate);
       $timezone = core_date::get_user_timezone($time);
-      $dst = dst_offset_on($activity->activitydate, $timezone);
-      $activitydate = $time - $dst;
+      $activitydate = $time->getOffset();
 
       $cell1 = new html_table_cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
       $cell2 = new html_table_cell($activity->activitydetails);
@@ -212,7 +216,6 @@ function activity_row($activity, $v, $completedhours){
 }
 
 function activity_completed_hours($activities, $type){
-
   $activitycompletedhours = 0;
   foreach ($activities as $activity) {
     if($activity->activitytype == $type){

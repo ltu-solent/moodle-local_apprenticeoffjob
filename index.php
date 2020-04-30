@@ -52,7 +52,7 @@ if (isloggedin() && $USER->id != 1) {
 
 echo $OUTPUT->header();
 
-$notify = new \core\output\notification(nl2br(get_string('statement1', 'local_apprenticeoffjob')),
+$notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
                 \core\output\notification::NOTIFY_INFO);
 echo html_writer::span($OUTPUT->render($notify));
 
