@@ -36,12 +36,14 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
 $PAGE->navbar->add(get_string('editactivity',  'local_apprenticeoffjob'));
 
-if (isloggedin() && $USER->id != 1) {
-$PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
-} else {
-  $PAGE->set_heading(get_string('pluginname', 'local_apprenticeoffjob'));
+if (!isloggedin() or isguestuser()) {
+    if (empty($SESSION->wantsurl)) {
+        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
+    }
+    redirect(get_login_url());
 }
 
+$PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
 $activityid = $_GET['id'];
 

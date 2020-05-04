@@ -26,14 +26,19 @@
 require('../../config.php');
 require_once('locallib.php');
 require_once('lib.php');
-//require_once('/report/apprenticeoffjob/lib.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/apprenticeoffjob/index.php');
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 
-global $PAGE, $USER, $DB, $OUTPUT;
+// Optional parameters if coming from course report
+$studentid = optional_param('id', '', PARAM_INT);
+$reportuser = optional_param('user', '', PARAM_INT);
+$course = optional_param('course', '', PARAM_INT);
+
+global $USER, $DB, $OUTPUT;
+
 // Trigger an grade report viewed event.
 // $event = \report_feedbackdashboard\event\feedbackdashboard_report_viewed::create(array(
 //             'context' => context_user::instance($USER->id),
@@ -44,49 +49,43 @@ global $PAGE, $USER, $DB, $OUTPUT;
 //           ));
 // $event->trigger();
 
-if (isloggedin() && $USER->id != 1) {
-  $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
-} else {
-  $PAGE->set_heading(get_string('pluginname', 'local_apprenticeoffjob'));
+// require proper login or redirect
+if (!isloggedin() or isguestuser()) {
+    if (empty($SESSION->wantsurl)) {
+        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
+    }
+    redirect(get_login_url());
 }
+
+// Check if we're the student viewing or someone with capability from a report.
+if(!empty($studentid)){
+  $student = $DB->get_record('user', array('id'=>$studentid));
+
+}else{
+  $student = $DB->get_record('user', array('id'=>$USER->id));
+}
+
+$PAGE->set_heading($student->firstname . ' ' . $student->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 echo $OUTPUT->header();
 
-$notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
-                \core\output\notification::NOTIFY_INFO);
-echo html_writer::span($OUTPUT->render($notify));
-
-$url = new moodle_url('activity.php');
-echo html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary"]);
-
-$printbutton = html_writer::start_tag('button', array('id'=>'printbutton', 'onClick'=>'window.print()', 'class' => 'btn btn-secondary btn-apprentice-print'));
-$printbutton .= get_string('print', 'local_apprenticeoffjob');
-$printbutton .= html_writer::end_tag('button');
-echo $printbutton;
-
-$activities = get_user_activities();
-$expectedhours = get_expected_hours();
-$totalhours = 0;
-
-foreach($activities as $activity=>$value) {
-  $totalhours = $totalhours + $value->activityhours;
+if($USER->id == $student->id || !empty($course)){
+  if(!empty($course)){
+    $reportviewer = context_course::instance($course);
+    if(has_capability('report/apprenticeoffjob:view', $reportviewer)){
+      $activities = get_user_activities($student->id);
+      $expectedhours = get_expected_hours($student->id);
+      echo get_hours_summary($student, $activities, $expectedhours);
+      echo activities_table($activities, $student->id);
+    }else{
+      echo "No permission";
+    }
+  }else{
+    $activities = get_user_activities($student->id);
+    $expectedhours = get_expected_hours($student->id);
+    echo get_hours_summary($student, $activities, $expectedhours);
+    echo activities_table($activities, $student->id);
+  }
 }
-
-$hoursleft = $expectedhours['totalhours'] - $totalhours;
-echo get_string('totalhours', 'local_apprenticeoffjob');
-echo get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalhours]);
-
-if($expectedhours != null){
-  echo get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours['totalhours']]);
-  echo get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
-}
-
-$usercontext = context_user::instance($USER->id);
-$filename = get_filename($usercontext->id);
-$url= moodle_url::make_pluginfile_url($usercontext->id,'report_apprenticeoffjob','apprenticeoffjob', 0,'/',$filename, true);
-echo '<a href="'.$url.'">Commitment statement</a>';
-
-echo get_string('completedhoursbreakdown', 'local_apprenticeoffjob');
-echo activities_table($activities);
 
 echo $OUTPUT->footer();

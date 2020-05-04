@@ -4,7 +4,7 @@ require_once("$CFG->libdir/formslib.php");
 
 class activity extends moodleform {
 	public function definition() {
-		global $USER, $DB, $CFG, $OUTPUT;
+		global $DB, $CFG, $OUTPUT;
 
 		$mform = $this->_form;
 
@@ -31,7 +31,7 @@ class activity extends moodleform {
     $mform->setType('activitydetails', PARAM_TEXT );
 		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
     $mform->setType('activityhours', PARAM_RAW);
-		$mform->addRule('activityhours', get_string('err_numeric', 'report_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
+		$mform->addRule('activityhours', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
 		$mform->addElement('hidden', 'id', '');
 		$mform->setType('id', PARAM_INT);
     $mform->addElement('hidden', 'activityupdate', '');
@@ -48,7 +48,7 @@ class activity extends moodleform {
 
 class deleteform extends moodleform {
 	public function definition() {
-		global $USER, $DB, $CFG, $OUTPUT;
+		global $DB, $CFG, $OUTPUT;
 
 		$mform = $this->_form;
     $mform->addElement('html', $OUTPUT->notification(get_string('deleteconfirm', 'local_apprenticeoffjob')));

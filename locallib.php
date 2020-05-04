@@ -26,34 +26,37 @@
 defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
 function get_activities(){
-  global $DB, $USER;
+  global $DB;
   $activities = $DB->get_records('local_apprenticeactivities');
   return $activities;
 }
 
-function get_user_activities(){
-  global $DB, $USER;
-  if(get_expected_hours() == null){
+function get_user_activities($studentid){
+  global $DB;
+  if(get_expected_hours($studentid) == null){
+
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname
+                                        a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
                                         FROM {local_apprentice} a
                                         JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
+                                        JOIN {course} c ON c.id = a.course
                                         WHERE a.userid = ?
-                                        ORDER BY ?', array($USER->id,'activitytype'));
+                                        ORDER BY ?', array($studentid,'activitytype'));
   }else{
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname
+                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
                                           FROM {report_apprentice} r
                                           JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
-                                          LEFT JOIN {local_apprentice} a ON a.activitytype = r.activityid
+                                          LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = ?
+                                          LEFT JOIN {course} c ON c.id = a.course
                                           WHERE r.studentid = ?
-                                          ORDER BY ?', array($USER->id,'r.id, a.activitytype'));
+                                          ORDER BY ?', array($studentid, $studentid,'r.id, a.activitytype'));
   }
   return $activities;
 }
 
-function get_expected_hours(){
-  global $DB,$USER;
+function get_expected_hours($studentid){
+  global $DB;
   if(report_exists() != null){
     $expectedhours = array();
     $totalhours = 0;
@@ -61,7 +64,7 @@ function get_expected_hours(){
                                     FROM {report_apprentice} r
                                     JOIN {local_apprenticeactivities} l ON l.id = r.activityid
                                     WHERE r.studentid = ?',
-                                    array($USER->id));
+                                    array($studentid));
 
     if(count($hours)!= 0){
       foreach($hours as $hour=>$h){
@@ -99,37 +102,36 @@ function save_activity($formdata){
   return $activityid;
 }
 
-function activities_table($activities){
+function activities_table($activities, $studentid){
+  global $USER;
   $completedhours = 0.00;
   $activitytypes = array();
-  //$activityhours = array();
-  $expectedhours = get_expected_hours();
-//var_dump($activityhours);
+  $expectedhours = get_expected_hours($studentid);
+
   foreach ($activities as $k => $v) {
-    //var_dump();
-    //$newhours = $activityhours[$v->activitytype]['activityhours'];
-    //var_dump($newhours);
-    //$activityhours[$v->activitytype]['activityhours'] = $new_input['name'];
-    //$activityhours[$v->activitytype]->activityhours += sprintf("%02.2f", $v->activityhours);
-    //$activityhours[$v->activitytype]['activityhours'] += sprintf("%02.2f", $v->activityhours);
     $activitytypes[$v->activitytype] = $v->activityname;
   }
-//var_dump($activityhours);
+
   $activitytypes = array_unique($activitytypes);
 
   // Main header row
   $table = new html_table();
   $table->attributes['class'] = 'generaltable boxaligncenter';
   $table->cellpadding = 5;
-  $table->id = 'gradetable';
-  $table->head = array('Date', 'Details', 'Hours', '');
-
+  $table->id = 'apprenticeoffjob';
+  if($studentid == $USER->id){
+    $ownerstudent = 1;
+    $table->head = array('Date', 'Course/Module', 'Details', 'Hours', '');
+  }else{
+    $ownerstudent = 0;
+    $table->head = array('Date', 'Course/Module', 'Details', 'Hours');
+  }
   // Activity header rows
   foreach($activitytypes as $type => $v){
     $row = new html_table_row();
     $row->attributes['class'] = 'activityheader';
     $cell1 = new html_table_cell($v);
-    $cell1->colspan = 2;
+    $cell1->colspan = 3;
 
     $activitycompletedhours = activity_completed_hours($activities, $type);
     if($expectedhours){
@@ -138,13 +140,20 @@ function activities_table($activities){
       $cell2 = new html_table_cell();
     }
     $cell2->attributes['class'] = 'cell-align-right';
-    $cell3 = new html_table_cell();
-    $row->cells = array($cell1, $cell2, $cell3);
+    if($ownerstudent == 1){
+      $cell3 = new html_table_cell();
+      $row->cells = array($cell1, $cell2, $cell3);
+    }else{
+      $row->cells = array($cell1, $cell2);
+    }
     $table->data[] = $row;
 
     foreach ($activities as $activity) {
+
       if($activity->activitydate != null){
-        $table->data[] = activity_row($activity, $v, $completedhours);
+        if($activity->activityname == $v){
+          $table->data[] = activity_row($activity, $v, $completedhours, $ownerstudent);
+        }
       }
     }
   }
@@ -169,10 +178,18 @@ function format_date($activitydate){
 }
 
 function get_filename($contextid){
-  global $DB;
-  $filename = $DB->get_record('files', ['contextid'=>$contextid, 'filearea'=>'apprenticeoffjob'], 'filename');
+  if(report_exists()){
+    global $DB;
 
-  return $filename->filename;
+    $filename = $DB->get_record_sql("SELECT filename FROM {files}
+                                      WHERE contextid = ?
+                                      AND (filearea = ? AND filesize != ?)", array($contextid, "apprenticeoffjob", "filename", 0 ));
+    if($filename){
+      return $filename->filename;
+    }else{
+      return null;
+    }
+  }
 }
 
 function report_exists(){
@@ -184,8 +201,7 @@ function report_exists(){
      return null;
 }
 
-function activity_row($activity, $v, $completedhours){
-    if($activity->activityname == $v){
+function activity_row($activity, $v, $completedhours, $ownerstudent){
       $completedhours = $completedhours + $activity->activityhours;
       $row = new html_table_row();
       $time = new DateTime('now', core_date::get_user_timezone_object());
@@ -194,28 +210,32 @@ function activity_row($activity, $v, $completedhours){
       $activitydate = $time->getOffset();
 
       $cell1 = new html_table_cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
-      $cell2 = new html_table_cell($activity->activitydetails);
-      $cell3 = new html_table_cell($activity->activityhours);
-      $cell3->attributes['class'] = 'cell-align-right';
-      $params = ['id'=> $activity->activityid];
-      $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
-      $editbutton = html_writer::start_tag('a', array('href'=>$editurl, 'class' => 'btn btn-secondary'));
-      $editbutton .= get_string('edit', 'local_apprenticeoffjob');
-      $editbutton .= html_writer::end_tag('a');
-      $deleteurl = new moodle_url('/local/apprenticeoffjob/delete.php', $params);
-      $deletebutton = html_writer::start_tag('a', array('href'=>$deleteurl, 'class' => 'btn btn-secondary'));
-      $deletebutton .= get_string('delete', 'local_apprenticeoffjob');
-      $deletebutton .= html_writer::end_tag('a');
-      $cell4 = new html_table_cell($editbutton . ' ' . $deletebutton);
+      $cell2 = new html_table_cell($activity->fullname);
+      $cell3 = new html_table_cell($activity->activitydetails);
+      $cell4 = new html_table_cell($activity->activityhours);
       $cell4->attributes['class'] = 'cell-align-right';
-
-      $row->cells = array($cell1, $cell2, $cell3, $cell4);
+      if($ownerstudent == 1){
+        $params = ['id'=> $activity->activityid];
+        $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
+        $editbutton = html_writer::start_tag('a', array('href'=>$editurl, 'class' => 'btn btn-secondary'));
+        $editbutton .= get_string('edit', 'local_apprenticeoffjob');
+        $editbutton .= html_writer::end_tag('a');
+        $deleteurl = new moodle_url('/local/apprenticeoffjob/delete.php', $params);
+        $deletebutton = html_writer::start_tag('a', array('href'=>$deleteurl, 'class' => 'btn btn-secondary'));
+        $deletebutton .= get_string('delete', 'local_apprenticeoffjob');
+        $deletebutton .= html_writer::end_tag('a');
+        $cell5 = new html_table_cell($editbutton . ' ' . $deletebutton);
+        $cell5->attributes['class'] = 'cell-align-right';
+        $row->cells = array($cell1, $cell2, $cell3, $cell4, $cell5);
+      }else{
+        $row->cells = array($cell1, $cell2, $cell3, $cell4);
+      }
 
       return $row;
-  }
 }
 
 function activity_completed_hours($activities, $type){
+  //var_dump($activities);
   $activitycompletedhours = 0;
   foreach ($activities as $activity) {
     if($activity->activitytype == $type){
@@ -236,6 +256,50 @@ function get_apprentice_courses(){
                                   WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
                                   AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP())
                                   AND ue.userid = ?
-                                  AND cc.name ='Course pages' OR cc.name = 'unit pages'" , array($USER->id, $USER->id));
+                                  AND cc.name = ? OR cc.name = ?" , array($USER->id, $USER->id, 'course pages', 'unit pages'));
   return $courses;
+}
+
+function get_hours_summary($student, $activities, $expectedhours){
+  global $USER, $DB, $OUTPUT;
+  $summary = '';
+  $notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
+                  \core\output\notification::NOTIFY_INFO);
+  $summary .= html_writer::span($OUTPUT->render($notify));
+
+  $url = new moodle_url('activity.php');
+  $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary"]);
+
+  $printbutton = html_writer::start_tag('button', array('id'=>'printbutton', 'onClick'=>'window.print()', 'class' => 'btn btn-secondary btn-apprentice-print'));
+  $printbutton .= get_string('print', 'local_apprenticeoffjob');
+  $printbutton .= html_writer::end_tag('button');
+  $summary .= $printbutton;
+
+  $totalhours = 0;
+
+  foreach($activities as $activity=>$value) {
+    $totalhours = $totalhours + $value->activityhours;
+  }
+
+  $hoursleft = $expectedhours['totalhours'] - $totalhours;
+  $summary .= get_string('totalhours', 'local_apprenticeoffjob');
+  $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalhours]);
+
+  if($expectedhours != null){
+    $summary .= get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours['totalhours']]);
+    $summary .= get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
+  }
+
+  $usercontext = context_user::instance($student->id);
+  $filename = get_filename($usercontext->id);
+  if($filename){
+    $url= moodle_url::make_pluginfile_url($usercontext->id,'report_apprenticeoffjob','apprenticeoffjob', 0,'/',$filename, true);
+    $summary .= '<a href="'.$url.'">Commitment statement</a>';
+  }elseif($filename == null){
+    $summary.= 'Commitment statement not available';
+  }
+
+  $summary .= get_string('completedhoursbreakdown', 'local_apprenticeoffjob');
+
+  return $summary;
 }
