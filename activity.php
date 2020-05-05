@@ -19,7 +19,7 @@
  *
  * @package    local
  * @subpackage apprenticeoffjob
- * @copyright  2019 onwards Solent University
+ * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $PAGE, $USER,$COURSE;

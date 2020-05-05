@@ -19,7 +19,7 @@
  *
  * @package    local
  * @subpackage apprenticeoffjob
- * @copyright  2019 onwards Solent University
+ * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $PAGE, $USER, $COURSE, $DB, $OUTPUT;
@@ -46,10 +46,11 @@ if (!isloggedin() or isguestuser()) {
 $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
 $activityid = $_GET['id'];
+$studentid = $_GET['student'];
 
-$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+if($USER->id == $studentid){
+  $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
 
-//if($USER->id == $activity->userid){
   $editform = new activity();
   $formdata = array('id' => $activity->id,
                     'course' => $activity->course,
@@ -71,8 +72,8 @@ $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
     }
   }
   $editform->display();
-// }else{
-//   echo $OUTPUT->notification('No permission');
-// }
+}else{
+  echo $OUTPUT->notification('No permission');
+}
 
 echo $OUTPUT->footer();

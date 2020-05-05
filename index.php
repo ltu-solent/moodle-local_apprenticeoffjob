@@ -25,7 +25,6 @@
 
 require('../../config.php');
 require_once('locallib.php');
-require_once('lib.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/apprenticeoffjob/index.php');
@@ -38,16 +37,6 @@ $reportuser = optional_param('user', '', PARAM_INT);
 $course = optional_param('course', '', PARAM_INT);
 
 global $USER, $DB, $OUTPUT;
-
-// Trigger an grade report viewed event.
-// $event = \report_feedbackdashboard\event\feedbackdashboard_report_viewed::create(array(
-//             'context' => context_user::instance($USER->id),
-//             'relateduserid' => $USER->id,
-//             'other' => array(
-//                   'userid' => $USER->id
-//               )
-//           ));
-// $event->trigger();
 
 // require proper login or redirect
 if (!isloggedin() or isguestuser()) {
@@ -65,10 +54,21 @@ if(!empty($studentid)){
   $student = $DB->get_record('user', array('id'=>$USER->id));
 }
 
+// Trigger an grade report viewed event.
+// $event = \local_apprenticeoffjob\event\apprenticeoffjob_log_viewed::create(array(
+//             'context' => context_user::instance($USER->id),
+//             'relateduserid' => $student->id,
+//             'other' => array(
+//                   'userid' => $USER->id
+//               )
+//           ));
+// $event->trigger();
+
 $PAGE->set_heading($student->firstname . ' ' . $student->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 echo $OUTPUT->header();
 
+// Display table
 if($USER->id == $student->id || !empty($course)){
   if(!empty($course)){
     $reportviewer = context_course::instance($course);

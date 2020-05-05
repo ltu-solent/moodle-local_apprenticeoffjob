@@ -19,7 +19,7 @@
  *
  * @package    local
  * @subpackage apprenticeoffjob
- * @copyright  2019 onwards Solent University
+ * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $PAGE, $USER, $COURSE, $DB, $OUTPUT;
@@ -36,7 +36,6 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
 $PAGE->navbar->add(get_string('deleteactivity',  'local_apprenticeoffjob'));
 
-
 if (!isloggedin() or isguestuser()) {
     if (empty($SESSION->wantsurl)) {
         $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
@@ -48,25 +47,28 @@ $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string
 echo $OUTPUT->header();
 
 $activityid = $_GET['id'];
-$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
-$activity->activitydate = format_date($activity->activitydate);
-// //if($USER->id == $activity->userid){
-   $deleteform = new deleteform(null, array('activity' => $activity));
-   $formdata = array('id' => $activity->id);
-   $deleteform->set_data($formdata);
-  if ($deleteform->is_cancelled()) {
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
-  } else if ($formdata = $deleteform->get_data()) {
-    $deleteactivity = delete_activity($formdata);
-    if($deleteactivity == true){
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
-    }else{
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
+$studentid = $_GET['student'];
+
+if($USER->id == $studentid){
+  $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+  $activity->activitydate = format_date($activity->activitydate);
+  // //if($USER->id == $activity->userid){
+     $deleteform = new deleteform(null, array('activity' => $activity));
+     $formdata = array('id' => $activity->id);
+     $deleteform->set_data($formdata);
+    if ($deleteform->is_cancelled()) {
+      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
+    } else if ($formdata = $deleteform->get_data()) {
+      $deleteactivity = delete_activity($formdata);
+      if($deleteactivity == true){
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
+      }else{
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
+      }
     }
-  }
    $deleteform->display();
-// }else{
-//   echo $OUTPUT->notification('No permission');
-// }
+}else{
+  echo $OUTPUT->notification('No permission');
+}
 
 echo $OUTPUT->footer();

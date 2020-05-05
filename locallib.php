@@ -19,7 +19,7 @@
  *
  * @package    local
  * @subpackage apprenticeoffjob
- * @copyright  2019 onwards Solent University
+ * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -152,7 +152,7 @@ function activities_table($activities, $studentid){
 
       if($activity->activitydate != null){
         if($activity->activityname == $v){
-          $table->data[] = activity_row($activity, $v, $completedhours, $ownerstudent);
+          $table->data[] = activity_row($activity, $v, $completedhours, $ownerstudent, $studentid);
         }
       }
     }
@@ -201,7 +201,7 @@ function report_exists(){
      return null;
 }
 
-function activity_row($activity, $v, $completedhours, $ownerstudent){
+function activity_row($activity, $v, $completedhours, $ownerstudent, $studentid){
       $completedhours = $completedhours + $activity->activityhours;
       $row = new html_table_row();
       $time = new DateTime('now', core_date::get_user_timezone_object());
@@ -215,7 +215,7 @@ function activity_row($activity, $v, $completedhours, $ownerstudent){
       $cell4 = new html_table_cell($activity->activityhours);
       $cell4->attributes['class'] = 'cell-align-right';
       if($ownerstudent == 1){
-        $params = ['id'=> $activity->activityid];
+        $params = ['id'=> $activity->activityid, 'student'=>$studentid];
         $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
         $editbutton = html_writer::start_tag('a', array('href'=>$editurl, 'class' => 'btn btn-secondary'));
         $editbutton .= get_string('edit', 'local_apprenticeoffjob');
@@ -296,7 +296,9 @@ function get_hours_summary($student, $activities, $expectedhours){
     $url= moodle_url::make_pluginfile_url($usercontext->id,'report_apprenticeoffjob','apprenticeoffjob', 0,'/',$filename, true);
     $summary .= '<a href="'.$url.'">Commitment statement</a>';
   }elseif($filename == null){
-    $summary.= 'Commitment statement not available';
+    if(report_exists() == true){
+      $summary.= 'Commitment statement not available';
+    }
   }
 
   $summary .= get_string('completedhoursbreakdown', 'local_apprenticeoffjob');
