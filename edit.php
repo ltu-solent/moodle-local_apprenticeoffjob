@@ -45,12 +45,14 @@ if (!isloggedin() or isguestuser()) {
 
 $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
-$activityid = $_GET['id'];
-$studentid = $_GET['student'];
 
-if($USER->id == $studentid){
-  $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+$activityid = optional_param('id', '', PARAM_INT);
+$studentid = optional_param('student', '', PARAM_INT);
 
+
+$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+  //print_object($activity);
+if($USER->id == $activity->userid){
   $editform = new activity();
   $formdata = array('id' => $activity->id,
                     'course' => $activity->course,
@@ -66,6 +68,17 @@ if($USER->id == $studentid){
   } else if ($formdata = $editform->get_data()) {
     $saveactivity = save_activity($formdata);
     if($saveactivity == true){
+      // Trigger a log viewed event.
+      $usercontext = context_user::instance($USER->id);
+      $event = \local_apprenticeoffjob\event\activity_edited::create(array(
+                  'context' =>  $usercontext,
+                  'userid' => $USER->id,
+                  'other' => array(
+                        'activityid' => $formdata->id
+                    )
+                ));
+      $event->trigger();
+
       redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
     }else{
       redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
@@ -73,7 +86,7 @@ if($USER->id == $studentid){
   }
   $editform->display();
 }else{
-  echo $OUTPUT->notification('No permission');
+  echo $OUTPUT->notification(get_string('nopermission', 'local_apprenticeoffjob'));
 }
 
 echo $OUTPUT->footer();

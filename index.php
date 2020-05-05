@@ -54,15 +54,14 @@ if(!empty($studentid)){
   $student = $DB->get_record('user', array('id'=>$USER->id));
 }
 
-// Trigger an grade report viewed event.
-// $event = \local_apprenticeoffjob\event\apprenticeoffjob_log_viewed::create(array(
-//             'context' => context_user::instance($USER->id),
-//             'relateduserid' => $student->id,
-//             'other' => array(
-//                   'userid' => $USER->id
-//               )
-//           ));
-// $event->trigger();
+// Trigger a log viewed event.
+$usercontext = context_user::instance($USER->id);
+$event = \local_apprenticeoffjob\event\log_viewed::create(array(
+            'context' =>  $usercontext,
+            'relateduserid' => $student->id,
+            'userid' => $USER->id
+          ));
+$event->trigger();
 
 $PAGE->set_heading($student->firstname . ' ' . $student->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
@@ -78,7 +77,7 @@ if($USER->id == $student->id || !empty($course)){
       echo get_hours_summary($student, $activities, $expectedhours);
       echo activities_table($activities, $student->id);
     }else{
-      echo "No permission";
+      echo get_string('nopermission', 'local_apprenticeoffjob');
     }
   }else{
     $activities = get_user_activities($student->id);

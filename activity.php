@@ -52,6 +52,14 @@ if ($activityform->is_cancelled()) {
 } else if ($formdata = $activityform->get_data()) {
   $saveactivity = save_activity($formdata);
   if(is_int($saveactivity)){
+    // Trigger an activity added event.
+    $usercontext = context_user::instance($USER->id);
+    $event = \local_apprenticeoffjob\event\activity_added::create(array(
+                'context' =>  $usercontext,
+                'userid' => $USER->id
+              ));
+    $event->trigger();
+
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/activity.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
   }else{
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/activity.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);

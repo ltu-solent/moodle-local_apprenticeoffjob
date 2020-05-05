@@ -46,29 +46,41 @@ if (!isloggedin() or isguestuser()) {
 $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
 
-$activityid = $_GET['id'];
-$studentid = $_GET['student'];
+$activityid = optional_param('id', '', PARAM_INT);
+$studentid = optional_param('student', '', PARAM_INT);
 
-if($USER->id == $studentid){
-  $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
+
+if($USER->id == $activity->userid){
   $activity->activitydate = format_date($activity->activitydate);
-  // //if($USER->id == $activity->userid){
-     $deleteform = new deleteform(null, array('activity' => $activity));
-     $formdata = array('id' => $activity->id);
-     $deleteform->set_data($formdata);
-    if ($deleteform->is_cancelled()) {
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
-    } else if ($formdata = $deleteform->get_data()) {
-      $deleteactivity = delete_activity($formdata);
-      if($deleteactivity == true){
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
-      }else{
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
-      }
+
+  $deleteform = new deleteform(null, array('activity' => $activity));
+  $formdata = array('id' => $activity->id);
+  $deleteform->set_data($formdata);
+  if ($deleteform->is_cancelled()) {
+    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
+  } else if ($formdata = $deleteform->get_data()) {
+    $deleteactivity = delete_activity($formdata);
+    if($deleteactivity == true){
+      // Trigger a log viewed event.
+      $usercontext = context_user::instance($USER->id);
+      $event = \local_apprenticeoffjob\event\activity_deleted::create(array(
+                  'context' =>  $usercontext,
+                  'userid' => $USER->id,
+                  'other' => array(
+                        'activityid' => $formdata->id
+                    )
+                ));
+      $event->trigger();
+
+      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
+    }else{
+      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
     }
-   $deleteform->display();
+  }
+  $deleteform->display();
 }else{
-  echo $OUTPUT->notification('No permission');
+  echo $OUTPUT->notification(get_string('nopermission', 'local_apprenticeoffjob'));
 }
 
 echo $OUTPUT->footer();
