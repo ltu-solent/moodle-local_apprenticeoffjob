@@ -294,10 +294,10 @@ function get_hours_summary($student, $activities, $expectedhours){
   $filename = get_filename($usercontext->id);
   if($filename){
     $url= moodle_url::make_pluginfile_url($usercontext->id,'report_apprenticeoffjob','apprenticeoffjob', 0,'/',$filename, true);
-    $summary .= '<a href="'.$url.'">Commitment statement</a>';
+    $summary .= '<a href="'.$url.'">'. get_string('commitmentstatement', 'local_apprenticeoffjob') . '</a>';
   }elseif($filename == null){
     if(report_exists() == true){
-      $summary.= 'Commitment statement not available';
+      $summary.= get_string('commitmentnotavailable', 'local_apprenticeoffjob');
     }
   }
 
