@@ -17,7 +17,7 @@ th.c3{
 }
 
 @media print {
-  #page-local-apprenticeoffjob-index header, #page-local-apprenticeoffjob-index footer, #page-local-apprenticeoffjob-index #block-region-side-pre {
+ #page-local-apprenticeoffjob-index footer, #page-local-apprenticeoffjob-index #block-region-side-pre {
     display: none;
   }
   #page-local-apprenticeoffjob-index #region-main{

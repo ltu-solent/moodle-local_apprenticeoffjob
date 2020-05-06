@@ -275,10 +275,10 @@ function get_hours_summary($student, $activities, $expectedhours){
   $notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
                   \core\output\notification::NOTIFY_WARNING);
   $summary .= html_writer::span($OUTPUT->render($notify));
-
-  $url = new moodle_url('activity.php');
-  $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary", "id"=>"activitybutton"]);
-
+  if($USER->id == $student->id){
+    $url = new moodle_url('activity.php');
+    $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary", "id"=>"activitybutton"]);
+  }
   $printbutton = html_writer::start_tag('button', array('id'=>'printbutton', 'onClick'=>'window.print()', 'class' => 'btn btn-secondary btn-apprentice-print'));
   $printbutton .= get_string('print', 'local_apprenticeoffjob');
   $printbutton .= html_writer::end_tag('button');
