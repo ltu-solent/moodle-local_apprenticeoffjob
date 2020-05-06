@@ -60,9 +60,9 @@ if ($activityform->is_cancelled()) {
               ));
     $event->trigger();
 
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/activity.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
+    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
   }else{
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/activity.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
+    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
   }
 }
 

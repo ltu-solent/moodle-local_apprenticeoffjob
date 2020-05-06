@@ -277,7 +277,7 @@ function get_hours_summary($student, $activities, $expectedhours){
   $summary .= html_writer::span($OUTPUT->render($notify));
 
   $url = new moodle_url('activity.php');
-  $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary"]);
+  $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary", "id"=>"activitybutton"]);
 
   $printbutton = html_writer::start_tag('button', array('id'=>'printbutton', 'onClick'=>'window.print()', 'class' => 'btn btn-secondary btn-apprentice-print'));
   $printbutton .= get_string('print', 'local_apprenticeoffjob');

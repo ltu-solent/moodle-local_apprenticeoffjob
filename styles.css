@@ -12,6 +12,10 @@
   margin-left: 10px;
 }
 
+th.c3{
+  text-align: right;
+}
+
 @media print {
   #page-local-apprenticeoffjob-index header, #page-local-apprenticeoffjob-index footer, #page-local-apprenticeoffjob-index #block-region-side-pre {
     display: none;
@@ -34,5 +38,9 @@
 
   #page-local-apprenticeoffjob-index table.flexible th,#page-local-apprenticeoffjob-index .generaltable th, #page-local-apprenticeoffjob-index table.flexible td, #page-local-apprenticeoffjob-index .generaltable td{
     padding: 0;
+  }
+
+  #page-local-apprenticeoffjob-index #activitybutton, #page-local-apprenticeoffjob-index #printbutton, #page-local-apprenticeoffjob-index .lastcol{
+    display: none;
   }
 }
