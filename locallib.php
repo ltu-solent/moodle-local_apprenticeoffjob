@@ -273,7 +273,7 @@ function get_hours_summary($student, $activities, $expectedhours){
   global $USER, $DB, $OUTPUT;
   $summary = '';
   $notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
-                  \core\output\notification::NOTIFY_INFO);
+                  \core\output\notification::NOTIFY_WARNING);
   $summary .= html_writer::span($OUTPUT->render($notify));
 
   $url = new moodle_url('activity.php');

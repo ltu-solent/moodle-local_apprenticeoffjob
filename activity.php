@@ -46,6 +46,10 @@ if (!isloggedin() or isguestuser()) {
 $PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
 
+$notify = new \core\output\notification((get_string('confirm', 'local_apprenticeoffjob')),
+                \core\output\notification::NOTIFY_WARNING);
+echo html_writer::span($OUTPUT->render($notify));
+
 $activityform = new activity(null, array());
 if ($activityform->is_cancelled()) {
   redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');

@@ -53,6 +53,10 @@ $studentid = optional_param('student', '', PARAM_INT);
 $activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
   //print_object($activity);
 if($USER->id == $activity->userid){
+  $notify = new \core\output\notification((get_string('confirm', 'local_apprenticeoffjob')),
+                  \core\output\notification::NOTIFY_WARNING);
+  echo html_writer::span($OUTPUT->render($notify));
+
   $editform = new activity();
   $formdata = array('id' => $activity->id,
                     'course' => $activity->course,
