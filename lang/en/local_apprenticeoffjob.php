@@ -47,6 +47,8 @@ $string['editactivity'] = 'Edit activity';
 $string['errnumeric']='You must enter a whole number here.';
 $string['expectedhourstotal'] = '<p>Total expected hours: {$a->expectedhours}</p>';
 $string['hoursleft'] = '<p>Hours left to complete: {$a->hoursleft}</p>';
+$string['hourshelp'] = 'Hours should be entered in decimal format e.g. 30 mins = 0.5 hours, 1 hour 45 mins = 1.75 hours';
+$string['hourshelp_help'] = 'Hours should be entered in decimal format e.g. 30 mins = 0.5 hours, 1 hour 45 mins = 1.75 hours';
 $string['logviewed'] = 'Log viewed';
 $string['newactivity'] = 'New activity';
 $string['nopermission'] = 'You do not have permission to do that.';

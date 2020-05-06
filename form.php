@@ -55,6 +55,7 @@ class activity extends moodleform {
 		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
     $mform->setType('activityhours', PARAM_RAW);
 		$mform->addRule('activityhours', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
+		$mform->addHelpButton('activityhours', 'hourshelp', 'local_apprenticeoffjob');
 		$mform->addElement('hidden', 'id', '');
 		$mform->setType('id', PARAM_INT);
     $mform->addElement('hidden', 'activityupdate', '');
