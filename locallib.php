@@ -248,15 +248,24 @@ function activity_completed_hours($activities, $type){
 function get_apprentice_courses(){
   global $DB, $USER;
 
-  $courses = $DB->get_records_sql("SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
+  $params = [];
+  $unitpages = $DB->sql_like('cc.name', ':unitname', false, false);
+  $params['unitname'] = "%unit pages%";
+  $coursepages = $DB->sql_like('cc.name', ':coursename', false, false);
+  $params['coursename'] = "%course pages%";
+
+  $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
                                   FROM {enrol} e
-                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = ?
+                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = $USER->id
                                   JOIN {course} c ON c.id = e.courseid
                                   JOIN {course_categories} cc ON cc.id = c.category
                                   WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
                                   AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP())
-                                  AND ue.userid = ?
-                                  AND cc.name = ? OR cc.name = ?" , array($USER->id, $USER->id, 'course pages', 'unit pages'));
+                                  AND ue.userid = $USER->id
+                                  AND cc.name LIKE :unitname OR cc.name LIKE :coursename";
+
+  $courses = $DB->get_records_sql($sql, $params);
+
   return $courses;
 }
 
