@@ -46,7 +46,7 @@ $string['deleteactivity'] = 'Delete activity';
 $string['deleteconfirm'] = 'Are you sure you wish to delete this activity?';
 $string['edit'] = 'Edit';
 $string['editactivity'] = 'Edit activity';
-$string['errnumeric']='You must enter a whole number here.';
+$string['errnumeric']='You must enter a number here.';
 $string['expectedhourstotal'] = '<p>Total expected hours: {$a->expectedhours}</p>';
 $string['hoursleft'] = '<p>Hours left to complete: {$a->hoursleft}</p>';
 $string['hourshelp'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
