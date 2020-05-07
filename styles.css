@@ -40,7 +40,9 @@ th.c3{
     padding: 0;
   }
 
-  #page-local-apprenticeoffjob-index #activitybutton, #page-local-apprenticeoffjob-index #printbutton, #page-local-apprenticeoffjob-index .lastcol{
+  #page-local-apprenticeoffjob-index #activitybutton, #page-local-apprenticeoffjob-index #printbutton,
+  #page-local-apprenticeoffjob-index .editcol, #page-local-apprenticeoffjob-index #page-navbar,
+  #page-local-apprenticeoffjob-index .commitment{
     display: none;
   }
 }

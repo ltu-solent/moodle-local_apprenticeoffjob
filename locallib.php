@@ -122,6 +122,7 @@ function activities_table($activities, $studentid){
   if($studentid == $USER->id){
     $ownerstudent = 1;
     $table->head = array('Date', 'Course/Module', 'Details', 'Hours', '');
+    $table->colclasses = array('', '', '', '','editcol');
   }else{
     $ownerstudent = 0;
     $table->head = array('Date', 'Course/Module', 'Details', 'Hours');
@@ -142,6 +143,7 @@ function activities_table($activities, $studentid){
     $cell2->attributes['class'] = 'cell-align-right';
     if($ownerstudent == 1){
       $cell3 = new html_table_cell();
+      $cell3->attributes['class'] = 'editcol';
       $row->cells = array($cell1, $cell2, $cell3);
     }else{
       $row->cells = array($cell1, $cell2);
