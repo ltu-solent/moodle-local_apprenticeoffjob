@@ -22,7 +22,7 @@
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Apprenticeship Off Job Training';
+$string['pluginname'] = 'Apprentice off job hours log';
 $string['activitydate'] = 'Date';
 $string['activitydeleted'] = 'Activity deleted';
 $string['activitydetails'] = 'Activity details';
