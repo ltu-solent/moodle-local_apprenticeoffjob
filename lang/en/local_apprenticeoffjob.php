@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Apprentice off job hours log';
+$string['navigationlink'] = 'Apprentice off job hours log (Student link)';
 $string['activitydate'] = 'Date';
 $string['activitydeleted'] = 'Activity deleted';
 $string['activitydetails'] = 'Activity details';
@@ -57,4 +58,5 @@ $string['nopermission'] = 'You do not have permission to do that.';
 $string['print'] = 'Print this page';
 $string['statement1'] = '<p>Off-the-job training is a statutory requirement for an English apprenticeship and must make up at least 20% of an apprentice’s normal working hours (paid hours excluding overtime) over the planned duration of the apprenticeship.</p><p>It is training which is received by the apprentice, during the apprentice’s normal working hours, for the purpose of achieving the knowledge, skills and behaviours of the approved apprenticeship referenced in the apprenticeship agreement.</p>';
 $string['statement2'] = 'By submitting this form, I confirm that the following activity details were completed during my normal working hours (paid hours excluding overtime)';
+$string['statement3'] = 'By submitting this log, I confirm that the following activity details were completed during my normal working hours (paid hours excluding overtime)';
 $string['totalhours'] = '<h3>Summary of hours</h3>';

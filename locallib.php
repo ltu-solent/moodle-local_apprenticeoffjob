@@ -274,9 +274,13 @@ function get_apprentice_courses(){
 function get_hours_summary($student, $activities, $expectedhours){
   global $USER, $DB, $OUTPUT;
   $summary = '';
-  $notify = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
+  $notify1 = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
                   \core\output\notification::NOTIFY_WARNING);
-  $summary .= html_writer::span($OUTPUT->render($notify));
+  $notify2 = new \core\output\notification((get_string('statement3', 'local_apprenticeoffjob')),
+                  \core\output\notification::NOTIFY_WARNING);
+  $summary .= html_writer::start_span('notify1') . $OUTPUT->render($notify1) . html_writer::end_span();
+  $summary .= html_writer::start_span('notify2') . $OUTPUT->render($notify2) . html_writer::end_span();
+
   if($USER->id == $student->id){
     $url = new moodle_url('activity.php');
     $summary .= html_writer::link($url, get_string('newactivity', 'local_apprenticeoffjob'), ["class"=>"btn btn-secondary", "id"=>"activitybutton"]);
