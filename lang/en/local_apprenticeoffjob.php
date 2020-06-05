@@ -22,8 +22,8 @@
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Apprentice off job hours log';
-$string['navigationlink'] = 'Apprentice off job hours log (Student link)';
+$string['pluginname'] = 'Apprentice off the job hours log';
+$string['navigationlink'] = 'Apprentice off the job hours log (Student link)';
 $string['activitydate'] = 'Date';
 $string['activitydeleted'] = 'Activity deleted';
 $string['activitydetails'] = 'Activity details';
