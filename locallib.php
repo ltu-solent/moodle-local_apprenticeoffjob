@@ -252,7 +252,7 @@ function get_apprentice_courses(){
 
   $params = [];
   $unitpages = $DB->sql_like('cc.name', ':unitname', false, false);
-  $params['unitname'] = "%unit pages%";
+  $params['unitname'] = "%module pages%";
   $coursepages = $DB->sql_like('cc.name', ':coursename', false, false);
   $params['coursename'] = "%course pages%";
 
