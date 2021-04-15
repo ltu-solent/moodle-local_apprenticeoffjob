@@ -31,9 +31,9 @@ function get_activities(){
   return $activities;
 }
 
-function get_user_activities($studentid){
+function get_user_activities($studentid, $expectedhours){
   global $DB;
-  if(get_expected_hours($studentid) == null){
+  if($expectedhours == null){
 
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
                                         a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
@@ -78,6 +78,27 @@ function get_expected_hours($studentid){
     return null;
 }
 
+function get_actual_hours($studentid){
+	global $DB;
+	$actualhours = array();
+    $totalhours = 0;
+
+	$hours = $DB->get_records_sql('SELECT activitytype, SUM(activityhours) hours 
+									FROM {local_apprentice} 
+									where userid = ?
+									GROUP BY activitytype', array($studentid));
+    if(count($hours)!= 0){
+      foreach($hours as $hour=>$h){
+        $totalhours = $totalhours + $h->hours;
+        $actualhours[$h->activitytype] = $h->hours;
+      }
+      $actualhours['totalhours'] = $totalhours;
+
+      return $actualhours;
+    }
+    return null;	
+}
+
 function save_activity($formdata){
   global $DB, $USER;
   $activity = new stdClass();
@@ -102,11 +123,9 @@ function save_activity($formdata){
   return $activityid;
 }
 
-function activities_table($activities, $studentid){
+function activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours){
   global $USER;
-  $completedhours = 0.00;
   $activitytypes = array();
-  $expectedhours = get_expected_hours($studentid);
 
   foreach ($activities as $k => $v) {
     $activitytypes[$v->activitytype] = $v->activityname;
@@ -119,13 +138,13 @@ function activities_table($activities, $studentid){
   $table->attributes['class'] = 'generaltable boxaligncenter';
   $table->cellpadding = 5;
   $table->id = 'apprenticeoffjob';
-  if($studentid == $USER->id){
-    $ownerstudent = 1;
+  if($student->id == $USER->id){
     $table->head = array('Date', 'Course/Module', 'Details', 'Hours', '');
     $table->colclasses = array('', '', '', '','editcol');
   }else{
-    $ownerstudent = 0;
-    $table->head = array('Date', 'Course/Module', 'Details', 'Hours');
+	if($reportviewer == true){
+		$table->head = array('Date', 'Course/Module', 'Details', 'Hours');
+	}
   }
   // Activity header rows
   foreach($activitytypes as $type => $v){
@@ -134,14 +153,19 @@ function activities_table($activities, $studentid){
     $cell1 = new html_table_cell($v);
     $cell1->colspan = 3;
 
-    $activitycompletedhours = activity_completed_hours($activities, $type);
     if($expectedhours){
-      $cell2 = new html_table_cell($activitycompletedhours. '/' . $expectedhours[$type]);
+		if(isset($actualhours)){
+			$actual = array_key_exists($type, $actualhours) ? $actualhours[$type] : 0;
+		}else{
+			$actual = 0;
+		}
+		
+		$cell2 = new html_table_cell($actual . '/' . $expectedhours[$type]);
     }else{
       $cell2 = new html_table_cell();
     }
     $cell2->attributes['class'] = 'cell-align-right';
-    if($ownerstudent == 1){
+    if($student->id == $USER->id){
       $cell3 = new html_table_cell();
       $cell3->attributes['class'] = 'editcol';
       $row->cells = array($cell1, $cell2, $cell3);
@@ -151,10 +175,9 @@ function activities_table($activities, $studentid){
     $table->data[] = $row;
 
     foreach ($activities as $activity) {
-
       if($activity->activitydate != null){
         if($activity->activityname == $v){
-          $table->data[] = activity_row($activity, $v, $completedhours, $ownerstudent, $studentid);
+          $table->data[] = activity_row($activity, $USER, $reportviewer, $student->id);
         }
       }
     }
@@ -203,8 +226,7 @@ function report_exists(){
      return null;
 }
 
-function activity_row($activity, $v, $completedhours, $ownerstudent, $studentid){
-      $completedhours = $completedhours + $activity->activityhours;
+function activity_row($activity, $USER, $reportviewer, $studentid){
       $row = new html_table_row();
       $time = new DateTime('now', core_date::get_user_timezone_object());
       $time = DateTime::createFromFormat('U', $activity->activitydate);
@@ -216,7 +238,7 @@ function activity_row($activity, $v, $completedhours, $ownerstudent, $studentid)
       $cell3 = new html_table_cell($activity->activitydetails);
       $cell4 = new html_table_cell($activity->activityhours);
       $cell4->attributes['class'] = 'cell-align-right';
-      if($ownerstudent == 1){
+      if($studentid == $USER->id){
         $params = ['id'=> $activity->activityid, 'student'=>$studentid];
         $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
         $editbutton = html_writer::start_tag('a', array('href'=>$editurl, 'class' => 'btn btn-secondary'));
@@ -230,21 +252,12 @@ function activity_row($activity, $v, $completedhours, $ownerstudent, $studentid)
         $cell5->attributes['class'] = 'cell-align-right';
         $row->cells = array($cell1, $cell2, $cell3, $cell4, $cell5);
       }else{
-        $row->cells = array($cell1, $cell2, $cell3, $cell4);
+		  if($reportviewer == true){
+			$row->cells = array($cell1, $cell2, $cell3, $cell4);
+		  }
       }
 
       return $row;
-}
-
-function activity_completed_hours($activities, $type){
-  //var_dump($activities);
-  $activitycompletedhours = 0;
-  foreach ($activities as $activity) {
-    if($activity->activitytype == $type){
-      $activitycompletedhours = $activitycompletedhours + $activity->activityhours;
-    }
-  }
-  return $activitycompletedhours;
 }
 
 function get_apprentice_courses(){
@@ -252,9 +265,9 @@ function get_apprentice_courses(){
 
   $params = [];
   $unitpages = $DB->sql_like('cc.name', ':unitname', false, false);
-  $params['unitname'] = "%module pages%";
+  $params['unitname'] = "modules_current%";
   $coursepages = $DB->sql_like('cc.name', ':coursename', false, false);
-  $params['coursename'] = "%course pages%";
+  $params['coursename'] = "courses_%";
 
   $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
                                   FROM {enrol} e
@@ -264,14 +277,14 @@ function get_apprentice_courses(){
                                   WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
                                   AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP())
                                   AND ue.userid = $USER->id
-                                  AND cc.name LIKE :unitname OR cc.name LIKE :coursename";
+                                  AND cc.idnumber LIKE :unitname OR cc.idnumber LIKE :coursename";
 
   $courses = $DB->get_records_sql($sql, $params);
 
   return $courses;
 }
 
-function get_hours_summary($student, $activities, $expectedhours){
+function get_hours_summary($student, $expectedhours, $actualhours){
   global $USER, $DB, $OUTPUT;
   $summary = '';
   $notify1 = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
@@ -290,15 +303,9 @@ function get_hours_summary($student, $activities, $expectedhours){
   $printbutton .= html_writer::end_tag('button');
   $summary .= $printbutton;
 
-  $totalhours = 0;
-
-  foreach($activities as $activity=>$value) {
-    $totalhours = $totalhours + $value->activityhours;
-  }
-
-  $hoursleft = $expectedhours['totalhours'] - $totalhours;
+  $hoursleft = $expectedhours['totalhours'] - $actualhours['totalhours'];
   $summary .= get_string('totalhours', 'local_apprenticeoffjob');
-  $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalhours]);
+  $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $actualhours['totalhours']]);
 
   if($expectedhours != null){
     $summary .= get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours['totalhours']]);

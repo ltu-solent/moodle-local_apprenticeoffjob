@@ -49,7 +49,6 @@ if (!isloggedin() or isguestuser()) {
 // Check if we're the student viewing or someone with capability from a report.
 if(!empty($studentid)){
   $student = $DB->get_record('user', array('id'=>$studentid));
-
 }else{
   $student = $DB->get_record('user', array('id'=>$USER->id));
 }
@@ -68,23 +67,22 @@ $PAGE->set_heading($student->firstname . ' ' . $student->lastname . ' - ' . get_
 echo $OUTPUT->header();
 
 // Display table
-if($USER->id == $student->id || !empty($course)){
-  if(!empty($course)){
-    $reportviewer = context_course::instance($course);
-    if(has_capability('report/apprenticeoffjob:view', $reportviewer)){
-      $activities = get_user_activities($student->id);
-      $expectedhours = get_expected_hours($student->id);
-      echo get_hours_summary($student, $activities, $expectedhours);
-      echo activities_table($activities, $student->id);
-    }else{
-      echo get_string('nopermission', 'local_apprenticeoffjob');
-    }
-  }else{
-    $activities = get_user_activities($student->id);
-    $expectedhours = get_expected_hours($student->id);
-    echo get_hours_summary($student, $activities, $expectedhours);
-    echo activities_table($activities, $student->id);
-  }
+if($course != 0){
+	$ctx = context_course::instance($course);
+	$reportviewer = has_capability('report/apprenticeoffjob:view', $ctx);
+}else{
+	$reportviewer = false;
+}
+
+if($reportviewer == true || $USER->id == $student->id){
+	$expectedhours = get_expected_hours($student->id);
+	$activities = get_user_activities($student->id, $expectedhours);
+	$actualhours = get_actual_hours($student->id);
+
+	echo get_hours_summary($student, $expectedhours, $actualhours);
+	echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);   
+}else{
+	 echo get_string('nopermission', 'local_apprenticeoffjob');
 }
 
 echo $OUTPUT->footer();
