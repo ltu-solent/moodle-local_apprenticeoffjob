@@ -31,9 +31,17 @@ function get_activities(){
   return $activities;
 }
 
+/**
+ * Get user activities.
+ *
+ * @param int $studentid
+ * @param array $expectedhours Expected activities grouped by activity type.
+ * @return array
+ */
 function get_user_activities($studentid, $expectedhours){
   global $DB;
-  if($expectedhours == null){
+  // Expected hours are set by the teacher. If there are none, it's still possible the student has entered something.
+  if (count($expectedhours) == 0) {
 
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
                                         a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
@@ -44,59 +52,64 @@ function get_user_activities($studentid, $expectedhours){
                                         ORDER BY ?', array($studentid,'activitytype'));
   }else{
     $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                                          a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
-                                          FROM {report_apprentice} r
-                                          JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
-                                          LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = ?
-                                          LEFT JOIN {course} c ON c.id = a.course
-                                          WHERE r.studentid = ?
-                                          ORDER BY ?', array($studentid, $studentid,'r.id, a.activitytype'));
+                                        a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
+                                        FROM {report_apprentice} r
+                                        JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
+                                        LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = ?
+                                        LEFT JOIN {course} c ON c.id = a.course
+                                        WHERE r.studentid = ?
+                                        ORDER BY ?', array($studentid, $studentid,'r.id, a.activitytype'));
   }
   return $activities;
 }
 
-function get_expected_hours($studentid){
-  global $DB;
-  if(!report_exists()) {
-    $expectedhours = array();
+/**
+ * Get expected hours for a student.
+ *
+ * @param int $studentid
+ * @return array [$hoursbyactivity, $totalhours]
+ */
+function get_expected_hours($studentid) {
+    global $DB;
+    $hoursbyactivity = [];
     $totalhours = 0;
     $hours = $DB->get_records_sql('SELECT r.id, r.activityid, r.hours, l.activityname
                                     FROM {report_apprentice} r
                                     JOIN {local_apprenticeactivities} l ON l.id = r.activityid
-                                    WHERE r.studentid = ?',
-                                    array($studentid));
+                                    WHERE r.studentid = :studentid',
+                                    ['studentid' => $studentid]);
 
-    if(count($hours)!= 0){
-      foreach($hours as $hour=>$h){
-        $totalhours = $totalhours + $h->hours;
-        $expectedhours[$h->activityid] = $h->hours;
-      }
-      $expectedhours['totalhours'] = $totalhours;
-      return $expectedhours;
+    if (count($hours) > 0) {
+        foreach ($hours as $h) {
+            $totalhours = $totalhours + $h->hours;
+            $hoursbyactivity[$h->activityid] = $h->hours;
+        }
     }
-  }
-    return null;
+    return [$hoursbyactivity, (float)$totalhours];
 }
 
-function get_actual_hours($studentid){
+/**
+ * Get actual hours recorded by student
+ *
+ * @param int $studentid
+ * @return array [$hoursbyactivity, $totalhours]
+ */
+function get_actual_hours($studentid) {
 	global $DB;
-	$actualhours = array();
+	$actualhours = [];
     $totalhours = 0;
 
 	$hours = $DB->get_records_sql('SELECT activitytype, SUM(activityhours) hours 
 									FROM {local_apprentice} 
 									where userid = ?
 									GROUP BY activitytype', array($studentid));
-    if(count($hours)!= 0){
-      foreach($hours as $hour=>$h){
-        $totalhours = $totalhours + $h->hours;
-        $actualhours[$h->activitytype] = $h->hours;
-      }
-      $actualhours['totalhours'] = $totalhours;
-
-      return $actualhours;
+    if (count($hours) > 0) {
+        foreach ($hours as $h) {
+            $totalhours = $totalhours + $h->hours;
+            $actualhours[$h->activitytype] = $h->hours;
+        }
     }
-    return null;	
+    return [$actualhours, (float)$totalhours];
 }
 
 function save_activity($formdata){
@@ -284,8 +297,16 @@ function get_apprentice_courses(){
   return $courses;
 }
 
-function get_hours_summary($student, $expectedhours, $actualhours){
-  global $USER, $DB, $OUTPUT;
+/**
+ * Create a summary section
+ *
+ * @param object $student user object
+ * @param float $totalexpectedhours
+ * @param float $totalactualhours
+ * @return string HTML summary
+ */
+function get_hours_summary($student, float $totalexpectedhours, float $totalactualhours){
+  global $OUTPUT, $USER;
   $summary = '';
   $notify1 = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
                   \core\output\notification::NOTIFY_WARNING);
@@ -302,13 +323,13 @@ function get_hours_summary($student, $expectedhours, $actualhours){
   $printbutton .= get_string('print', 'local_apprenticeoffjob');
   $printbutton .= html_writer::end_tag('button');
   $summary .= $printbutton;
-
-  $hoursleft = $expectedhours['totalhours'] - $actualhours['totalhours'];
+  
+  $hoursleft = ($totalexpectedhours - $totalactualhours);
   $summary .= get_string('totalhours', 'local_apprenticeoffjob');
-  $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $actualhours['totalhours']]);
+  $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalactualhours]);
 
-  if($expectedhours != null){
-    $summary .= get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $expectedhours['totalhours']]);
+  if($totalexpectedhours > 0){
+    $summary .= get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $totalexpectedhours]);
     $summary .= get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
   }
 

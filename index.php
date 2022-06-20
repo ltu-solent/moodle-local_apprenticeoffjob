@@ -75,11 +75,11 @@ if($course != 0){
 }
 
 if($reportviewer == true || $USER->id == $student->id){
-	$expectedhours = get_expected_hours($student->id);
+	[$expectedhours, $totalexpectedhours] = get_expected_hours($student->id);
 	$activities = get_user_activities($student->id, $expectedhours);
-	$actualhours = get_actual_hours($student->id);
+	[$actualhours, $totalactualhours] = get_actual_hours($student->id);
 
-	echo get_hours_summary($student, $expectedhours, $actualhours);
+	echo get_hours_summary($student, $totalexpectedhours, $totalactualhours);
 	echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);   
 }else{
 	 echo get_string('nopermission', 'local_apprenticeoffjob');
