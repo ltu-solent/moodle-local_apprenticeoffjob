@@ -84,7 +84,6 @@ echo $OUTPUT->header();
 [$expectedhours, $totalexpectedhours] = get_expected_hours($student->id);
 $activities = get_user_activities($student->id, $expectedhours);
 [$actualhours, $totalactualhours] = get_actual_hours($student->id);
- echo $html;
 echo get_hours_summary($student, $totalexpectedhours, $totalactualhours);
 echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 
