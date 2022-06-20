@@ -24,14 +24,15 @@
  */
 
 require('../../config.php');
+require_login();
 require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 // Require proper login or redirect.
 if (!isloggedin() || isguestuser()) {
-  if (empty($SESSION->wantsurl)) {
-      $SESSION->wantsurl = $CFG->wwwroot . '/local/apprenticeoffjob/index.php';
-  }
-  redirect(get_login_url());
+    if (empty($SESSION->wantsurl)) {
+        $SESSION->wantsurl = $CFG->wwwroot . '/local/apprenticeoffjob/index.php';
+    }
+    redirect(get_login_url());
 }
 $context = context_user::instance($USER->id);
 // Optional parameters if coming from course report.
@@ -42,8 +43,8 @@ if ($studentid > 0) {
     $context = context_course::instance($courseid);
     $params = ['id' => $studentid, 'course' => $courseid];
 } else {
-  $courseid = 0;
-  $studentid = $USER->id;
+    $courseid = 0;
+    $studentid = $USER->id;
 }
 
 $PAGE->set_context($context);
@@ -62,19 +63,19 @@ if ($courseid > 0 && $USER->id != $student->id) {
     $reportviewer = true;
     // Trigger a course context event when the log for a user in a course is being viewed.
     $event = \local_apprenticeoffjob\event\log_viewed::create(array(
-      'context' =>  $context,
+      'context' => $context,
       'relateduserid' => $student->id,
       'userid' => $USER->id
     ));
-  $event->trigger();
+    $event->trigger();
 } else {
-  // Trigger a log viewed event when user's viewing their own report.
-  $usercontext = context_user::instance($USER->id);
-  $event = \local_apprenticeoffjob\event\log_viewed::create(array(
-    'context' =>  $usercontext,
-    'userid' => $USER->id
-  ));
-  $event->trigger();  
+    // Trigger a log viewed event when user's viewing their own report.
+    $usercontext = context_user::instance($USER->id);
+    $event = \local_apprenticeoffjob\event\log_viewed::create(array(
+        'context' => $usercontext,
+        'userid' => $USER->id
+    ));
+    $event->trigger();
 }
 
 $PAGE->set_heading(fullname($student) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
