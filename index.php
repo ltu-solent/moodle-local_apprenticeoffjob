@@ -39,7 +39,7 @@ $course = optional_param('course', '', PARAM_INT);
 global $USER, $DB, $OUTPUT;
 
 // require proper login or redirect
-if (!isloggedin() or isguestuser()) {
+if (!isloggedin() || isguestuser()) {
     if (empty($SESSION->wantsurl)) {
         $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
     }
