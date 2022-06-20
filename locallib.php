@@ -57,7 +57,7 @@ function get_user_activities($studentid, $expectedhours){
 
 function get_expected_hours($studentid){
   global $DB;
-  if(report_exists() != null){
+  if(!report_exists()) {
     $expectedhours = array();
     $totalhours = 0;
     $hours = $DB->get_records_sql('SELECT r.id, r.activityid, r.hours, l.activityname
@@ -217,13 +217,16 @@ function get_filename($contextid){
   }
 }
 
+/**
+ * Report tables exists.
+ *
+ * @deprecated 2022062100 report_apprenticeoffjob has a dependency on this, so this function is superfluous.
+ * @return bool
+ */
 function report_exists(){
   global $DB;
   $dbman = $DB->get_manager();
-  if($dbman->table_exists('report_apprentice')){
-    return true;
-  }
-     return null;
+  return $dbman->table_exists('report_apprentice');
 }
 
 function activity_row($activity, $USER, $reportviewer, $studentid){
