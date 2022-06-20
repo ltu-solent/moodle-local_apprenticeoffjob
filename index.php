@@ -24,65 +24,68 @@
  */
 
 require('../../config.php');
-require_once('locallib.php');
+require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/apprenticeoffjob/index.php');
+// Require proper login or redirect.
+if (!isloggedin() || isguestuser()) {
+  if (empty($SESSION->wantsurl)) {
+      $SESSION->wantsurl = $CFG->wwwroot . '/local/apprenticeoffjob/index.php';
+  }
+  redirect(get_login_url());
+}
+$context = context_user::instance($USER->id);
+// Optional parameters if coming from course report.
+$params = [];
+$studentid = optional_param('id', 0, PARAM_INT);
+if ($studentid > 0) {
+    $courseid = required_param('course', PARAM_INT);
+    $context = context_course::instance($courseid);
+    $params = ['id' => $studentid, 'course' => $courseid];
+} else {
+  $courseid = 0;
+  $studentid = $USER->id;
+}
+
+$PAGE->set_context($context);
+$PAGE->set_url('/local/apprenticeoffjob/index.php', $params);
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 
-// Optional parameters if coming from course report
-$studentid = optional_param('id', '', PARAM_INT);
-$reportuser = optional_param('user', '', PARAM_INT);
-$course = optional_param('course', '', PARAM_INT);
-
-global $USER, $DB, $OUTPUT;
-
-// require proper login or redirect
-if (!isloggedin() || isguestuser()) {
-    if (empty($SESSION->wantsurl)) {
-        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
-    }
-    redirect(get_login_url());
-}
-
 // Check if we're the student viewing or someone with capability from a report.
-if(!empty($studentid)){
-  $student = $DB->get_record('user', array('id'=>$studentid));
-}else{
-  $student = $DB->get_record('user', array('id'=>$USER->id));
+$student = $DB->get_record('user', array('id' => $studentid));
+
+// A student should be able to see their own report even if they have a courseid in the params.
+// So only require this capability of the given studentid is not the same as the logged in user.
+$reportviewer = false;
+if ($courseid > 0 && $USER->id != $student->id) {
+    require_capability('report/apprenticeoffjob:view', $context);
+    $reportviewer = true;
+    // Trigger a course context event when the log for a user in a course is being viewed.
+    $event = \local_apprenticeoffjob\event\log_viewed::create(array(
+      'context' =>  $context,
+      'relateduserid' => $student->id,
+      'userid' => $USER->id
+    ));
+  $event->trigger();
+} else {
+  // Trigger a log viewed event when user's viewing their own report.
+  $usercontext = context_user::instance($USER->id);
+  $event = \local_apprenticeoffjob\event\log_viewed::create(array(
+    'context' =>  $usercontext,
+    'userid' => $USER->id
+  ));
+  $event->trigger();  
 }
 
-// Trigger a log viewed event.
-$usercontext = context_user::instance($USER->id);
-$event = \local_apprenticeoffjob\event\log_viewed::create(array(
-            'context' =>  $usercontext,
-            'relateduserid' => $student->id,
-            'userid' => $USER->id
-          ));
-$event->trigger();
-
-$PAGE->set_heading($student->firstname . ' ' . $student->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
+$PAGE->set_heading(fullname($student) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 echo $OUTPUT->header();
 
-// Display table
-if($course != 0){
-	$ctx = context_course::instance($course);
-	$reportviewer = has_capability('report/apprenticeoffjob:view', $ctx);
-}else{
-	$reportviewer = false;
-}
-
-if($reportviewer == true || $USER->id == $student->id){
-	[$expectedhours, $totalexpectedhours] = get_expected_hours($student->id);
-	$activities = get_user_activities($student->id, $expectedhours);
-	[$actualhours, $totalactualhours] = get_actual_hours($student->id);
-
-	echo get_hours_summary($student, $totalexpectedhours, $totalactualhours);
-	echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);   
-}else{
-	 echo get_string('nopermission', 'local_apprenticeoffjob');
-}
+[$expectedhours, $totalexpectedhours] = get_expected_hours($student->id);
+$activities = get_user_activities($student->id, $expectedhours);
+[$actualhours, $totalactualhours] = get_actual_hours($student->id);
+ echo $html;
+echo get_hours_summary($student, $totalexpectedhours, $totalactualhours);
+echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 
 echo $OUTPUT->footer();
