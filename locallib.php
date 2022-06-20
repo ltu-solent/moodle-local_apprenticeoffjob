@@ -264,23 +264,20 @@ function get_apprentice_courses(){
   global $DB, $USER;
 
   $params = [];
-  $unitpages = $DB->sql_like('cc.name', ':unitname', false, false);
-  $params['unitname'] = "modules_current%";
-  $coursepages = $DB->sql_like('cc.name', ':coursename', false, false);
-  $params['coursename'] = "courses_%";
-
+  $unitpages = $DB->sql_like('cc.idnumber', ':unitcat', false, false);
+  $params['unitcat'] = "modules_%";
+  $coursepages = $DB->sql_like('cc.idnumber', ':coursecat', false, false);
+  $params['coursecat'] = "courses_%";
+  $params['userid'] = $USER->id;
   $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
                                   FROM {enrol} e
-                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = $USER->id
-                                  JOIN {course} c ON c.id = e.courseid
+                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = :userid
+                                  JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.startdate < UNIX_TIMESTAMP()
                                   JOIN {course_categories} cc ON cc.id = c.category
                                   WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
-                                  AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP())
-                                  AND ue.userid = $USER->id
-                                  AND cc.idnumber LIKE :unitname OR cc.idnumber LIKE :coursename";
+                                  AND ({$unitpages} OR {$coursepages})";
 
   $courses = $DB->get_records_sql($sql, $params);
-
   return $courses;
 }
 
