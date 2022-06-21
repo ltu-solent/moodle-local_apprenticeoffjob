@@ -26,10 +26,10 @@
 require('../../config.php');
 require_login();
 if (!isloggedin() or isguestuser()) {
-  if (empty($SESSION->wantsurl)) {
-      $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
-  }
-  redirect(get_login_url());
+    if (empty($SESSION->wantsurl)) {
+        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
+    }
+    redirect(get_login_url());
 }
 
 require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
@@ -38,10 +38,10 @@ require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 $activityid = required_param('id', PARAM_INT);
 $studentid = optional_param('studentid', 0, PARAM_INT);
 if ($studentid > 0 && $studentid != $USER->id) {
-  // TODO: Allow admins to delete activities.
-  throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
+    // TODO: Allow admins to delete activities.
+    throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
 } else {
-  $studentid = $USER->id;
+    $studentid = $USER->id;
 }
 $activity = $DB->get_record('local_apprentice', ['id' => $activityid, 'userid' => $studentid], '*', MUST_EXIST);
 
@@ -64,26 +64,26 @@ $formdata = array('id' => $activity->id);
 $deleteform->set_data($formdata);
 if ($deleteform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
-} elseif ($formdata = $deleteform->get_data()) {
+} else if ($formdata = $deleteform->get_data()) {
     $deleteactivity = delete_activity($formdata);
-    if($deleteactivity == true){
-      // Trigger a log viewed event.
-      $usercontext = context_user::instance($USER->id);
-      $event = \local_apprenticeoffjob\event\activity_deleted::create(array(
-                  'context' =>  $usercontext,
-                  'userid' => $USER->id,
-                  'other' => array(
-                        'activityid' => $formdata->id
-                    )
-                ));
-      $event->trigger();
+    if ($deleteactivity == true) {
+        // Trigger a log viewed event.
+        $usercontext = context_user::instance($USER->id);
+        $event = \local_apprenticeoffjob\event\activity_deleted::create(array(
+                'context' => $usercontext,
+                'userid' => $USER->id,
+                'other' => array(
+                    'activityid' => $formdata->id
+                )
+        ));
+        $event->trigger();
 
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
-    }else{
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
+    } else {
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php',
+            get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
     }
 }
-
 
 echo $OUTPUT->header();
 $deleteform->display();
