@@ -22,8 +22,8 @@
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $PAGE, $USER, $COURSE, $DB, $OUTPUT;
 
+// This is basically the same as activity.php.
 require('../../config.php');
 require_once('form.php');
 require_once('locallib.php');
