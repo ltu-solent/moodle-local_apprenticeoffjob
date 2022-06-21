@@ -23,66 +23,66 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../config.php');
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->libdir/formslib.php");
 
 class activity extends moodleform {
-	public function definition() {
-		global $DB, $CFG, $OUTPUT;
+    public function definition() {
+        $mform = $this->_form;
+        $courses = get_apprentice_courses();
+        $courseoptions = array();
+        foreach ($courses as $c) {
+            $courseoptions[$c->courseid] = $c->fullname;
+        }
 
-		$mform = $this->_form;
+        $activitytypes = get_activities();
+        $activityoptions = array();
+        foreach ($activitytypes as $type) {
+            $activityoptions[$type->id] = $type->activityname;
+        }
 
-		$courses = get_apprentice_courses();
+        $mform->addElement('select', 'course', get_string('course',  'local_apprenticeoffjob'), $courseoptions);
+        $mform->setType('course', PARAM_INT);
 
-		$courseoptions = array();
-		foreach($courses as $course => $c){
-			$courseoptions[$c->courseid] = $c->fullname;
-		}
+        $mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $activityoptions);
+        $mform->setType('activitytype', PARAM_INT);
 
-		$activitytypes = get_activities();
-		$activityoptions =array();
-		foreach ($activitytypes as $type => $value) {
-			$activityoptions[$value->id] = $value->activityname;
-		}
+        $mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
+        $mform->setType('activitydate', PARAM_INT);
 
-		$mform->addElement('select', 'course', get_string('course',  'local_apprenticeoffjob'), $courseoptions);
-    $mform->setType('course', PARAM_INT);
-		$mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $activityoptions);
-    $mform->setType('activitytype', PARAM_INT);
-		$mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
-    $mform->setType('activitydate', PARAM_INT);
-		$mform->addElement('text', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'));
-    $mform->setType('activitydetails', PARAM_TEXT );
-		$mform->addHelpButton('activitydetails', 'activitydetailshelp', 'local_apprenticeoffjob');
-		$mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
-    $mform->setType('activityhours', PARAM_RAW);
-		$mform->addRule('activityhours', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'server', 1, 0);
-		$mform->addHelpButton('activityhours', 'hourshelp', 'local_apprenticeoffjob');
-		$mform->addElement('hidden', 'id', '');
-		$mform->setType('id', PARAM_INT);
-    $mform->addElement('hidden', 'activityupdate', '');
-		$mform->setType('activityupdate', PARAM_INT);
+        $mform->addElement('text', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'));
+        $mform->setType('activitydetails', PARAM_TEXT );
+        $mform->addRule('activitydetails', new lang_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('activitydetails', 'activitydetailshelp', 'local_apprenticeoffjob');
 
-    $this->add_action_buttons();
-	}
+        $mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
+        $mform->setType('activityhours', PARAM_RAW);
+        $mform->addRule('activityhours', new lang_string('required'), 'required', null, 'client');
+        $mform->addRule('activityhours', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'client', 1, 0);
+        $mform->addHelpButton('activityhours', 'hourshelp', 'local_apprenticeoffjob');
 
-	public function validation($data, $files) {
-			$errors = parent::validation($data, $files);
-      return $errors;
-  }
+        $mform->addElement('hidden', 'id', '');
+        $mform->setType('id', PARAM_INT);
+
+        $mform->addElement('hidden', 'activityupdate', '');
+        $mform->setType('activityupdate', PARAM_INT);
+
+        $this->add_action_buttons();
+    }
 }
 
 class deleteform extends moodleform {
-	public function definition() {
-		global $DB, $CFG, $OUTPUT;
+    public function definition() {
+        global $OUTPUT;
+        $mform = $this->_form;
+        $mform->addElement('html', $OUTPUT->notification(get_string('deleteconfirm', 'local_apprenticeoffjob')));
+        $mform->addElement('html', '<p>Date: ' . $this->_customdata['activity']->activitydate. '</p>');
+        $mform->addElement('html', '<p>Details: ' . $this->_customdata['activity']->activitydetails. '</p>');
+        $mform->addElement('html', '<p>Hours: ' . $this->_customdata['activity']->activityhours. '</p>');
+        $mform->addElement('hidden', 'id', $this->_customdata['activity']->id);
+        $mform->setType('id', PARAM_INT);
 
-		$mform = $this->_form;
-    $mform->addElement('html', $OUTPUT->notification(get_string('deleteconfirm', 'local_apprenticeoffjob')));
-    $mform->addElement('html', '<p>Date: ' . $this->_customdata['activity']->activitydate. '</p>');
-    $mform->addElement('html', '<p>Details: ' . $this->_customdata['activity']->activitydetails. '</p>');
-    $mform->addElement('html', '<p>Hours: ' . $this->_customdata['activity']->activityhours. '</p>');
-    $mform->addElement('hidden', 'id', $this->_customdata['activity']->id);
-		$mform->setType('id', PARAM_INT);
-
-    $this->add_action_buttons(true, get_string('buttonyes', 'local_apprenticeoffjob'));
-	}
+        $this->add_action_buttons(true, get_string('buttonyes', 'local_apprenticeoffjob'));
+    }
 }
