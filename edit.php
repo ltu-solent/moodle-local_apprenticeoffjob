@@ -25,16 +25,9 @@
 
 // This is basically the same as activity.php.
 require('../../config.php');
-require_once('form.php');
-require_once('locallib.php');
-
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/apprenticeoffjob/edit.php', array('id' => $_GET['id']));
-$PAGE->set_pagelayout('report');
-$PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
-$PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
-$PAGE->navbar->add(get_string('editactivity',  'local_apprenticeoffjob'));
+require_login();
+require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
+require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 if (!isloggedin() or isguestuser()) {
     if (empty($SESSION->wantsurl)) {
@@ -43,54 +36,67 @@ if (!isloggedin() or isguestuser()) {
     redirect(get_login_url());
 }
 
-$PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
-echo $OUTPUT->header();
+$activityid = required_param('id', PARAM_INT);
+$studentid = optional_param('studentid', 0, PARAM_INT);
+if ($studentid > 0 && $studentid != $USER->id) {
+    // TODO: Allow admins to edit activities.
+    throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
+} else {
+    $studentid = $USER->id;
+}
 
-$activityid = optional_param('id', '', PARAM_INT);
-$studentid = optional_param('student', '', PARAM_INT);
+$activity = $DB->get_record('local_apprentice', [
+        'id' => $activityid,
+        'userid' => $studentid
+    ], '*', MUST_EXIST);
+
+$PAGE->set_context(context_user::instance($USER->id));
+$PAGE->set_url('/local/apprenticeoffjob/edit.php', array('id' => $activityid));
+$PAGE->set_pagelayout('report');
+$PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
+$PAGE->navbar->ignore_active();
+$PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
+$PAGE->navbar->add(get_string('editactivity',  'local_apprenticeoffjob'));
+$PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 
-$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
-  //print_object($activity);
-if($USER->id == $activity->userid){
-  $notify = new \core\output\notification((get_string('confirm', 'local_apprenticeoffjob')),
-                  \core\output\notification::NOTIFY_WARNING);
-  echo html_writer::span($OUTPUT->render($notify));
 
-  $editform = new activity();
-  $formdata = array('id' => $activity->id,
-                    'course' => $activity->course,
-                    'activitytype' => $activity->activitytype,
-                    'activitydate' => $activity->activitydate,
-                    'activitydetails' => $activity->activitydetails,
-                    'activityhours' => $activity->activityhours,
-                    'activityupdate' => 1
-                    );
-  $editform->set_data($formdata);
-  if ($editform->is_cancelled()) {
+$editform = new activity();
+$formdata = array('id' => $activity->id,
+                'course' => $activity->course,
+                'activitytype' => $activity->activitytype,
+                'activitydate' => $activity->activitydate,
+                'activitydetails' => $activity->activitydetails,
+                'activityhours' => $activity->activityhours,
+                'activityupdate' => 1
+                );
+$editform->set_data($formdata);
+if ($editform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
-  } else if ($formdata = $editform->get_data()) {
+} else if ($formdata = $editform->get_data()) {
     $saveactivity = save_activity($formdata);
-    if($saveactivity == true){
-      // Trigger a log viewed event.
-      $usercontext = context_user::instance($USER->id);
-      $event = \local_apprenticeoffjob\event\activity_edited::create(array(
-                  'context' =>  $usercontext,
-                  'userid' => $USER->id,
-                  'other' => array(
+    if ($saveactivity == true) {
+        // Trigger a log viewed event.
+        $usercontext = context_user::instance($USER->id);
+        $event = \local_apprenticeoffjob\event\activity_edited::create(array(
+                    'context' => $usercontext,
+                    'userid' => $USER->id,
+                    'other' => array(
                         'activityid' => $formdata->id
                     )
                 ));
-      $event->trigger();
+        $event->trigger();
 
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
-    }else{
-      redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
+    } else {
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
     }
-  }
-  $editform->display();
-}else{
-  echo $OUTPUT->notification(get_string('nopermission', 'local_apprenticeoffjob'));
 }
 
+echo $OUTPUT->header();
+$notify = new \core\output\notification((get_string('confirm', 'local_apprenticeoffjob')),
+                  \core\output\notification::NOTIFY_WARNING);
+echo $OUTPUT->render($notify);
+
+$editform->display();
 echo $OUTPUT->footer();
