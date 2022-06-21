@@ -22,29 +22,27 @@
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $PAGE, $USER,$COURSE;
 
 require('../../config.php');
-require_once('form.php');
-require_once('locallib.php');
+require_login();
+require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
+require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
-$PAGE->set_context(context_system::instance());
+if (!isloggedin() or isguestuser()) {
+  if (empty($SESSION->wantsurl)) {
+      $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
+  }
+  redirect(get_login_url());
+}
+
+$PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_url('/local/apprenticeoffjob/activity.php');
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
 $PAGE->navbar->add(get_string('newactivity',  'local_apprenticeoffjob'));
-
-if (!isloggedin() or isguestuser()) {
-    if (empty($SESSION->wantsurl)) {
-        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
-    }
-    redirect(get_login_url());
-}
-
-$PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
-
+$PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 $activityform = new activity(null, array());
 if ($activityform->is_cancelled()) {
