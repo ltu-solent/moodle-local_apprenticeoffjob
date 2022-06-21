@@ -1,4 +1,4 @@
-.activityheader{
+#page-local-apprenticeoffjob-index .activityheader{
   font-weight: bold;
   background-color: #999 !important;
   color: #fff;
@@ -12,8 +12,8 @@
   margin-left: 10px;
 }
 
-th.c3{
-  text-align: right;
+#page-local-apprenticeoffjob-index table#apprenticeoffjob th.c3{
+    text-align: right;
 }
 
 #page-local-apprenticeoffjob-index .notify2{
