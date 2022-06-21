@@ -1,57 +1,57 @@
-#page-local-apprenticeoffjob-index .activityheader{
-  font-weight: bold;
-  background-color: #999 !important;
-  color: #fff;
+#page-local-apprenticeoffjob-index .activityheader {
+    font-weight: bold;
+    background-color: #999;
+    color: #fff;
 }
 
 .cell-align-right {
     text-align: right;
 }
 
-.btn-apprentice-print{
-  margin-left: 10px;
+.btn-apprentice-print {
+    margin-left: 10px;
 }
 
-#page-local-apprenticeoffjob-index table#apprenticeoffjob th.c3{
+#page-local-apprenticeoffjob-index table#apprenticeoffjob th.c3 {
     text-align: right;
 }
 
-#page-local-apprenticeoffjob-index .notify2{
-  display: none;
+#page-local-apprenticeoffjob-index .notify2 {
+    display: none;
 }
 
 @media print {
- /* #page-local-apprenticeoffjob-index footer, #page-local-apprenticeoffjob-index #block-region-side-pre {
-    display: none;
-  } */
-  #page-local-apprenticeoffjob-index #region-main{
-    width:100%;
-  }
+    #page-local-apprenticeoffjob-index #region-main {
+        width: 100%;
+    }
 
-  #page-local-apprenticeoffjob-index{
-    font-size: 0.7em;
-  }
+    #page-local-apprenticeoffjob-index {
+        font-size: 0.7em;
+    }
 
-  #page-local-apprenticeoffjob-index h2{
-    font-size: 1.8em;
-  }
+    #page-local-apprenticeoffjob-index h2 {
+        font-size: 1.8em;
+    }
 
-  #page-local-apprenticeoffjob-index table.flexible th,#page-local-apprenticeoffjob-index .generaltable th, #page-local-apprenticeoffjob-index table.flexible td, #page-local-apprenticeoffjob-index .generaltable td{
-    padding: 0;
-  }
+    #page-local-apprenticeoffjob-index table.flexible th,
+    #page-local-apprenticeoffjob-index .generaltable th,
+    #page-local-apprenticeoffjob-index table.flexible td,
+    #page-local-apprenticeoffjob-index .generaltable td {
+        padding: 0;
+    }
 
-  #page-local-apprenticeoffjob-index footer,
-  #page-local-apprenticeoffjob-index #block-region-side-pre,
-  #page-local-apprenticeoffjob-index #activitybutton,
-  #page-local-apprenticeoffjob-index #printbutton,
-  #page-local-apprenticeoffjob-index #page-navbar,
-  #page-local-apprenticeoffjob-index .editcol,
-  #page-local-apprenticeoffjob-index .commitment,
-  #page-local-apprenticeoffjob-index .notify1{
-    display: none;
-  }
+    #page-local-apprenticeoffjob-index footer,
+    #page-local-apprenticeoffjob-index #block-region-side-pre,
+    #page-local-apprenticeoffjob-index #activitybutton,
+    #page-local-apprenticeoffjob-index #printbutton,
+    #page-local-apprenticeoffjob-index #page-navbar,
+    #page-local-apprenticeoffjob-index .editcol,
+    #page-local-apprenticeoffjob-index .commitment,
+    #page-local-apprenticeoffjob-index .notify1 {
+        display: none;
+    }
 
-  #page-local-apprenticeoffjob-index .notify2{
-    display: block;
-  }
+    #page-local-apprenticeoffjob-index .notify2 {
+        display: block;
+    }
 }
