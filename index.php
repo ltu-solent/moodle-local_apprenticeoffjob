@@ -82,10 +82,12 @@ $PAGE->set_heading(fullname($student) . ' - ' . get_string('pluginname', 'local_
 
 echo $OUTPUT->header();
 
-[$expectedhours, $totalexpectedhours] = get_expected_hours($student->id);
-$activities = get_user_activities($student->id, $expectedhours);
-[$actualhours, $totalactualhours] = get_actual_hours($student->id);
-echo get_hours_summary($student, $totalexpectedhours, $totalactualhours);
+[$expectedhours, $totalexpectedhours] = \local_apprenticeoffjob\api::get_expected_hours($student->id);
+$activities = \local_apprenticeoffjob\api::get_user_activities($student->id, $expectedhours);
+[$actualhours, $totalactualhours] = \local_apprenticeoffjob\api::get_actual_hours($student->id);
+
+$summary = new \local_apprenticeoffjob\output\summary($student, $totalexpectedhours, $totalactualhours);
+echo $OUTPUT->render($summary);
 echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 
 echo $OUTPUT->footer();

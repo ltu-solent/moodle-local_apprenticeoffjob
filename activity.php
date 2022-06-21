@@ -48,7 +48,7 @@ $activityform = new activity(null, array());
 if ($activityform->is_cancelled()) {
   redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {
-  $saveactivity = save_activity($formdata);
+  $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
   if(is_int($saveactivity)){
     // Trigger an activity added event.
     $usercontext = context_user::instance($USER->id);

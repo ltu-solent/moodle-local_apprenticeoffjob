@@ -270,7 +270,7 @@ class locallib_testcase extends advanced_testcase {
 
         // Actual tests for Student1.
         $this->setUser($student1);
-        $apprenticecourses = get_apprentice_courses();
+        $apprenticecourses = api::get_apprentice_courses();
         // The count should be 6.
         $this->assertCount(6, $apprenticecourses);
         // Should be listed.
@@ -296,7 +296,7 @@ class locallib_testcase extends advanced_testcase {
 
         // Student 2.
         $this->setUser($student2);
-        $apprenticecourses = get_apprentice_courses();
+        $apprenticecourses = api::get_apprentice_courses();
         // One module, One Course.
         $this->assertCount(2, $apprenticecourses);
         // Should be listed.

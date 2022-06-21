@@ -23,116 +23,58 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
+use local_apprenticeoffjob\api;
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Undocumented function
+ * @deprecated version
+ * @return void
+ */
 function get_activities() {
-    global $DB;
-    $activities = $DB->get_records('local_apprenticeactivities');
-    return $activities;
+    return api::get_activitytypes();
 }
 
 /**
  * Get user activities.
- *
+ * @deprecated version
  * @param int $studentid
  * @param array $expectedhours Expected activities grouped by activity type.
  * @return array
  */
 function get_user_activities($studentid, $expectedhours) {
-    global $DB;
-    // Expected hours are set by the teacher. If there are none, it's still possible the student has entered something.
-    if (count($expectedhours) == 0) {
-
-        $activities = $DB->get_records_sql("SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
-                FROM {local_apprentice} a
-                JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
-                JOIN {course} c ON c.id = a.course
-                WHERE a.userid = :studentid
-                ORDER BY a.activitype", ['studentid' => $studentid]);
-    } else {
-        $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
-                FROM {report_apprentice} r
-                JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
-                LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = :userid
-                LEFT JOIN {course} c ON c.id = a.course
-                WHERE r.studentid = :studentid
-                ORDER BY r.id, a.activitytype', ['userid' => $studentid, 'studentid' => $studentid]);
-    }
-    return $activities;
+    return api::get_user_activities($studentid, $expectedhours);
 }
 
 /**
  * Get expected hours for a student.
- *
+ * @deprecated version
  * @param int $studentid
  * @return array [$hoursbyactivity, $totalhours]
  */
 function get_expected_hours($studentid) {
-    global $DB;
-    $hoursbyactivity = [];
-    $totalhours = 0;
-    $hours = $DB->get_records_sql('SELECT r.id, r.activityid, r.hours, l.activityname
-                                    FROM {report_apprentice} r
-                                    JOIN {local_apprenticeactivities} l ON l.id = r.activityid
-                                    WHERE r.studentid = :studentid',
-                                    ['studentid' => $studentid]);
-
-    if (count($hours) > 0) {
-        foreach ($hours as $h) {
-            $totalhours = $totalhours + $h->hours;
-            $hoursbyactivity[$h->activityid] = $h->hours;
-        }
-    }
-    return [$hoursbyactivity, (float)$totalhours];
+    return api::get_expected_hours($studentid);
 }
 
 /**
  * Get actual hours recorded by student
- *
+ * @deprecated version
  * @param int $studentid
  * @return array [$hoursbyactivity, $totalhours]
  */
 function get_actual_hours($studentid) {
-    global $DB;
-    $actualhours = [];
-    $totalhours = 0;
-
-    $hours = $DB->get_records_sql('SELECT activitytype, SUM(activityhours) hours
-                            FROM {local_apprentice}
-                            where userid = :userid
-                            GROUP BY activitytype', ['userid' => $studentid]);
-    if (count($hours) > 0) {
-        foreach ($hours as $h) {
-            $totalhours = $totalhours + $h->hours;
-            $actualhours[$h->activitytype] = $h->hours;
-        }
-    }
-    return [$actualhours, (float)$totalhours];
+    return api::get_actual_hours($studentid);
 }
 
+/**
+ * Save activity data
+ * @deprecated version
+ * @param object $formdata
+ * @return int ActivityID
+ */
 function save_activity($formdata) {
-    global $DB, $USER;
-    $activity = new stdClass();
-    $activity->userid = $USER->id;
-    $activity->course = $formdata->course;
-    $activity->activitytype = intval($formdata->activitytype);
-    $activity->activitydate = $formdata->activitydate;
-    $activity->activitydetails = $formdata->activitydetails;
-    $activity->activityhours = $formdata->activityhours;
-    $date = new DateTime("now", core_date::get_user_timezone_object());
-    $date->setTime(0, 0, 0);
-
-    if ($formdata->activityupdate == 1) {
-        $activity->id = $formdata->id;
-        $activity->timemodified = $date->getTimestamp();
-        $activityid = $DB->update_record('local_apprentice', $activity, true);
-    } else {
-        $activity->timecreated = $date->getTimestamp();
-        $activityid = $DB->insert_record('local_apprentice', $activity, true);
-    }
-    return $activityid;
+    return api::save_activity($formdata);
 }
 
 function activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours) {
@@ -196,41 +138,34 @@ function activities_table($activities, $reportviewer, $student, $expectedhours, 
     return html_writer::table($table);
 }
 
+/**
+ * Delete activity
+ * @deprecated version
+ * @param object $formdata
+ * @return void
+ */
 function delete_activity($formdata) {
-    global $DB;
-    $deleted = $DB->delete_records('local_apprentice', array('id' => $formdata->id));
-    return $deleted;
+    return api::delete_activity($formdata);
 }
 
+/**
+ * Format data
+ * @deprecated version
+ * @param string $activitydate Date/Time
+ * @return string
+ */
 function format_date($activitydate) {
-
-    $date = new DateTime();
-    $date = DateTime::createFromFormat('U', $activitydate);
-    $timezone = core_date::get_user_timezone($date);
-    date_default_timezone_set($timezone);
-    $date = userdate($activitydate, get_string('strftimedaydate', 'langconfig'));
-
-    return $date;
+    return api::format_date($activitydate);
 }
 
 /**
  * Gets the filename for the given context.
- *
+ * @deprecated version
  * @param int $contextid
  * @return string The filename
  */
 function get_filename($contextid) {
-    global $DB;
-
-    $filename = $DB->get_field_select('files', 'filename',
-        "contextid = :contextid
-            AND (filearea = :filearea AND filesize != :filesize)",
-        [
-            'contextid' => $contextid,
-            'filearea' => 'apprenticeoffjob',
-            'filesize' => 0
-        ]);
-    return $filename ?? '';
+    return api::get_filename($contextid);
 }
 
 /**
@@ -240,9 +175,7 @@ function get_filename($contextid) {
  * @return bool
  */
 function report_exists() {
-    global $DB;
-    $dbman = $DB->get_manager();
-    return $dbman->table_exists('report_apprentice');
+    return api::report_exists();
 }
 
 /**
@@ -289,89 +222,23 @@ function activity_row($activity, $student, $reportviewer, $studentid) {
 
 /**
  * Gets valid courses for the logged in user for logging apprentice hours
- *
+ * @deprecated version
  * @return array
  */
 function get_apprentice_courses() {
-    global $DB, $USER;
-
-    $params = [];
-    $unitpages = $DB->sql_like('cc.idnumber', ':unitcat', false, false);
-    $params['unitcat'] = "modules_%";
-    $coursepages = $DB->sql_like('cc.idnumber', ':coursecat', false, false);
-    $params['coursecat'] = "courses_%";
-    $params['userid'] = $USER->id;
-    $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
-                                  FROM {enrol} e
-                                  JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = :userid
-                                  JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.startdate < UNIX_TIMESTAMP()
-                                  JOIN {course_categories} cc ON cc.id = c.category
-                                  WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
-                                  AND ({$unitpages} OR {$coursepages})";
-
-    $courses = $DB->get_records_sql($sql, $params);
-    return $courses;
+    return api::get_apprentice_courses();
 }
 
 /**
  * Create a summary section
- *
+ * @deprecated version
  * @param object $student user object
  * @param float $totalexpectedhours
  * @param float $totalactualhours
  * @return string HTML summary
  */
 function get_hours_summary($student, float $totalexpectedhours, float $totalactualhours) {
-    global $OUTPUT, $USER;
-    $summary = '';
-    $notify1 = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
-                    \core\output\notification::NOTIFY_WARNING);
-    $notify2 = new \core\output\notification((get_string('statement3', 'local_apprenticeoffjob')),
-                    \core\output\notification::NOTIFY_WARNING);
-    $summary .= html_writer::start_span('notify1') . $OUTPUT->render($notify1) . html_writer::end_span();
-    $summary .= html_writer::start_span('notify2') . $OUTPUT->render($notify2) . html_writer::end_span();
-
-    if ($USER->id == $student->id) {
-        $url = new moodle_url('activity.php');
-        $summary .= html_writer::link($url,
-            get_string('newactivity', 'local_apprenticeoffjob'),
-            ["class" => "btn btn-secondary", "id" => "activitybutton"]);
-    }
-    $printbutton = html_writer::start_tag('button',
-        array('id' => 'printbutton', 'onClick' => 'window.print()', 'class' => 'btn btn-secondary btn-apprentice-print'));
-    $printbutton .= get_string('print', 'local_apprenticeoffjob');
-    $printbutton .= html_writer::end_tag('button');
-    $summary .= $printbutton;
-
-    $hoursleft = ($totalexpectedhours - $totalactualhours);
-    $summary .= get_string('totalhours', 'local_apprenticeoffjob');
-    $summary .= get_string('completedhours', 'local_apprenticeoffjob', ['completedhours' => $totalactualhours]);
-
-    if ($totalexpectedhours > 0) {
-        $summary .= get_string('expectedhourstotal', 'local_apprenticeoffjob', ['expectedhours' => $totalexpectedhours]);
-        $summary .= get_string('hoursleft', 'local_apprenticeoffjob', ['hoursleft' => $hoursleft]);
-    }
-
-    $usercontext = context_user::instance($student->id);
-    $filename = get_filename($usercontext->id);
-    if ($filename) {
-        $url = moodle_url::make_pluginfile_url(
-            $usercontext->id,
-            'report_apprenticeoffjob',
-            'apprenticeoffjob',
-            0,
-            '/',
-            $filename,
-            true
-        );
-        $summary .= '<a href="'.$url.'" class="commitment">'. get_string('commitmentstatement', 'local_apprenticeoffjob') . '</a>';
-    } else if ($filename == null) {
-        if (report_exists() == true) {
-            $summary .= '<span class="commitment">' . get_string('commitmentnotavailable', 'local_apprenticeoffjob').'</span>';
-        }
-    }
-
-    $summary .= get_string('completedhoursbreakdown', 'local_apprenticeoffjob');
-
+    global $OUTPUT;
+    $summary = new \local_apprenticeoffjob\output\summary($student, $totalexpectedhours, $totalactualhours);
     return $summary;
 }

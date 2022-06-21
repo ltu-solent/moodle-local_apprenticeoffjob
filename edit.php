@@ -74,7 +74,7 @@ $editform->set_data($formdata);
 if ($editform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $editform->get_data()) {
-    $saveactivity = save_activity($formdata);
+    $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
     if ($saveactivity == true) {
         // Trigger a log viewed event.
         $usercontext = context_user::instance($USER->id);

@@ -1,0 +1,29 @@
+<span class="notify1">
+    {{#notify1}}
+        {{> core/notification }}
+    {{/notify1}}
+</span>
+<span class="notify2">
+    {{#notify2}}
+        {{> core/notification }}
+    {{/notify2}}
+</span>
+{{#newactivity}}
+    <a href="{{url}}" class="{{class}}" id="{{id}}">{{text}}</a>
+{{/newactivity}}
+
+<button id="printbutton" onclick="window.print()"
+    class="btn btn-secondary btn-apprentice-print">{{#str}}print, local_apprenticeoffjob{{/str}}</button>
+{{#str}}totalhours, local_apprenticeoffjob{{/str}}
+{{#str}}completedhours, local_apprenticeoffjob, { "completedhours": {{completedhours}} }{{/str}}
+{{#expectedhours}}
+    {{#str}} expectedhourstotal, local_apprenticeoffjob, {"expectedhours" : {{total}} }{{/str}}
+    {{#str}} hoursleft, local_apprenticeoffjob, {"hoursleft" : {{hoursleft}} }{{/str}}
+{{/expectedhours}}
+{{#commitmentstatement}}
+    <a href="{{.}}" class="commitment">{{#str}} commitmentstatement, local_apprenticeoffjob {{/str}}</a>
+{{/commitmentstatement}}
+{{^commitmentstatement}}
+    <span class="commitment">{{#str}} commitmentnotavailable, local_apprenticeoffjob {{/str}}</span>
+{{/commitmentstatement}}
+{{#str}} completedhoursbreakdown, local_apprenticeoffjob {{/str}}

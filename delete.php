@@ -56,7 +56,7 @@ $PAGE->navbar->add(get_string('deleteactivity',  'local_apprenticeoffjob'));
 
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
-$activity->activitydate = format_date($activity->activitydate);
+$activity->activitydate = \local_apprenticeoffjob\api::format_date($activity->activitydate);
 
 $deleteform = new deleteform(null, array('activity' => $activity));
 
@@ -65,7 +65,7 @@ $deleteform->set_data($formdata);
 if ($deleteform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
 } else if ($formdata = $deleteform->get_data()) {
-    $deleteactivity = delete_activity($formdata);
+    $deleteactivity = \local_apprenticeoffjob\api::delete_activity($formdata);
     if ($deleteactivity == true) {
         // Trigger a log viewed event.
         $usercontext = context_user::instance($USER->id);
