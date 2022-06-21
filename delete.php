@@ -22,44 +22,49 @@
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $PAGE, $USER, $COURSE, $DB, $OUTPUT;
 
 require('../../config.php');
-require_once('form.php');
-require_once('locallib.php');
+require_login();
+if (!isloggedin() or isguestuser()) {
+  if (empty($SESSION->wantsurl)) {
+      $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
+  }
+  redirect(get_login_url());
+}
 
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/apprenticeoffjob/delete.php', array('id' => $_GET['id']));
+require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
+require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
+
+$activityid = required_param('id', PARAM_INT);
+$studentid = optional_param('studentid', 0, PARAM_INT);
+if ($studentid > 0 && $studentid != $USER->id) {
+  // TODO: Allow admins to delete activities.
+  throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
+} else {
+  $studentid = $USER->id;
+}
+$activity = $DB->get_record('local_apprentice', ['id' => $activityid, 'userid' => $studentid], '*', MUST_EXIST);
+
+
+$PAGE->set_context(context_user::instance($USER->id));
+$PAGE->set_url('/local/apprenticeoffjob/delete.php', array('id' => $activityid));
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
 $PAGE->navbar->add(get_string('deleteactivity',  'local_apprenticeoffjob'));
 
-if (!isloggedin() or isguestuser()) {
-    if (empty($SESSION->wantsurl)) {
-        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
-    }
-    redirect(get_login_url());
-}
+$PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
-$PAGE->set_heading($USER->firstname . ' ' . $USER->lastname . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
-echo $OUTPUT->header();
+$activity->activitydate = format_date($activity->activitydate);
 
-$activityid = optional_param('id', '', PARAM_INT);
-$studentid = optional_param('student', '', PARAM_INT);
+$deleteform = new deleteform(null, array('activity' => $activity));
 
-$activity = $DB->get_record('local_apprentice', array('id'=>$activityid));
-
-if($USER->id == $activity->userid){
-  $activity->activitydate = format_date($activity->activitydate);
-
-  $deleteform = new deleteform(null, array('activity' => $activity));
-  $formdata = array('id' => $activity->id);
-  $deleteform->set_data($formdata);
-  if ($deleteform->is_cancelled()) {
+$formdata = array('id' => $activity->id);
+$deleteform->set_data($formdata);
+if ($deleteform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
-  } else if ($formdata = $deleteform->get_data()) {
+} elseif ($formdata = $deleteform->get_data()) {
     $deleteactivity = delete_activity($formdata);
     if($deleteactivity == true){
       // Trigger a log viewed event.
@@ -77,10 +82,9 @@ if($USER->id == $activity->userid){
     }else{
       redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
     }
-  }
-  $deleteform->display();
-}else{
-  echo $OUTPUT->notification(get_string('nopermission', 'local_apprenticeoffjob'));
 }
 
+
+echo $OUTPUT->header();
+$deleteform->display();
 echo $OUTPUT->footer();

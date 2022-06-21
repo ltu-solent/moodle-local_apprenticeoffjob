@@ -54,6 +54,8 @@ $string['hourshelp'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 h
 $string['hourshelp_help'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
 $string['logviewed'] = 'Log viewed';
 $string['newactivity'] = 'New activity';
+
+$string['noeditpermissions'] = 'You do not have permissions to edit this activity.';
 $string['nopermission'] = 'You do not have permission to do that.';
 $string['print'] = 'Print this page';
 $string['statement1'] = '<p>Off-the-job training is a statutory requirement for an English apprenticeship and must make up at least 20% of an apprentice’s normal working hours (paid hours excluding overtime) over the planned duration of the apprenticeship.</p><p>It is training which is received by the apprentice, during the apprentice’s normal working hours, for the purpose of achieving the knowledge, skills and behaviours of the approved apprenticeship referenced in the apprenticeship agreement.</p>';
