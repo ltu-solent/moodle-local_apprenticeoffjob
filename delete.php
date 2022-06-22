@@ -32,9 +32,6 @@ if (!isloggedin() or isguestuser()) {
     redirect(get_login_url());
 }
 
-require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
-require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
-
 $activityid = required_param('id', PARAM_INT);
 $studentid = optional_param('studentid', 0, PARAM_INT);
 if ($studentid > 0 && $studentid != $USER->id) {

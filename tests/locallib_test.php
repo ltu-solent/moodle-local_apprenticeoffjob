@@ -28,7 +28,6 @@ namespace local_apprenticeoffjob;
 use advanced_testcase;
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 class locallib_testcase extends advanced_testcase {
 

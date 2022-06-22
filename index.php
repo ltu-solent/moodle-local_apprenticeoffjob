@@ -25,7 +25,6 @@
 
 require('../../config.php');
 require_login();
-require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 // Require proper login or redirect.
 if (!isloggedin() || isguestuser()) {

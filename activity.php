@@ -25,8 +25,6 @@
 
 require('../../config.php');
 require_login();
-require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
-require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 if (!isloggedin() or isguestuser()) {
     if (empty($SESSION->wantsurl)) {
