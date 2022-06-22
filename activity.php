@@ -29,10 +29,10 @@ require_once($CFG->dirroot . '/local/apprenticeoffjob/form.php');
 require_once($CFG->dirroot . '/local/apprenticeoffjob/locallib.php');
 
 if (!isloggedin() or isguestuser()) {
-  if (empty($SESSION->wantsurl)) {
-      $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
-  }
-  redirect(get_login_url());
+    if (empty($SESSION->wantsurl)) {
+        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
+    }
+    redirect(get_login_url());
 }
 
 $PAGE->set_context(context_user::instance($USER->id));
@@ -46,22 +46,22 @@ $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_app
 
 $activityform = new activity(null, array());
 if ($activityform->is_cancelled()) {
-  redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
+    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {
-  $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
-  if(is_int($saveactivity)){
-    // Trigger an activity added event.
-    $usercontext = context_user::instance($USER->id);
-    $event = \local_apprenticeoffjob\event\activity_added::create(array(
-                'context' =>  $usercontext,
-                'userid' => $USER->id
-              ));
-    $event->trigger();
+    $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
+    if (is_int($saveactivity)) {
+        // Trigger an activity added event.
+        $usercontext = context_user::instance($USER->id);
+        $event = \local_apprenticeoffjob\event\activity_added::create(array(
+                    'context' => $usercontext,
+                    'userid' => $USER->id
+                ));
+        $event->trigger();
 
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
-  }else{
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
-  }
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
+    } else {
+        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
+    }
 }
 
 echo $OUTPUT->header();

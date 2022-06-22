@@ -24,17 +24,14 @@
 
  namespace local_apprenticeoffjob\event;
 
- defined('MOODLE_INTERNAL') || die();
-
- /**
-  * The local_apprenticeoffjob activity added event class.
-  *
-  * @package    local_apprenticeoffjob
-  * @since      Moodle 3.6
-  * @copyright  2020 onwards Solent University
-  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-  */
-
+/**
+ * The local_apprenticeoffjob activity added event class.
+ *
+ * @package    local_apprenticeoffjob
+ * @since      Moodle 3.6
+ * @copyright  2020 onwards Solent University
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class activity_added extends \core\event\base {
 
     /**

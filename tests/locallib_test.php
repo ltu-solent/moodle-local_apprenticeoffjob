@@ -134,7 +134,7 @@ class locallib_testcase extends advanced_testcase {
             'student',
             'manual',
             $paststartdate);
-        
+
         $courses['BABCD'] = $this->getDataGenerator()->create_course([
             'fullname' => 'BA Binocular Conversation Darwin (BABCD)',
             'shortname' => 'BABCD',
@@ -149,7 +149,7 @@ class locallib_testcase extends advanced_testcase {
             'student',
             'manual',
             $paststartdate);
-        
+
         $courses['BACDE'] = $this->getDataGenerator()->create_course([
             'fullname' => 'BA Conversation Darwinian Environment (BACDE)',
             'shortname' => 'BACDE',
@@ -211,7 +211,6 @@ class locallib_testcase extends advanced_testcase {
             'manual',
             $paststartdate,
             $pastenddate);
-
 
         // False archive. i.e. A Category idnumber like modules_current_2019 rather than modules_2019.
         $cats['courses/FSHSS/2019ModulePages'] = $this->getDataGenerator()->create_category([

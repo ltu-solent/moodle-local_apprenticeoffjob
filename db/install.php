@@ -22,9 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
  * Install code for report_customsql.
  *
@@ -32,7 +29,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_local_apprenticeoffjob_install() {
     global $CFG, $DB;
-    
     $activities = [];
     $dataobject1 = new stdClass();
     $dataobject1->activityname = 'Teaching of Theory';

@@ -62,7 +62,6 @@ class summary implements renderable, templatable {
         $hoursleft = ($this->totalexpectedhours - $this->totalactualhours);
         $summary->completedhours = $this->totalactualhours;
 
-        
         if ($this->totalexpectedhours > 0) {
             $summary->expectedhours = new stdClass();
             $summary->expectedhours->total = $this->totalexpectedhours;

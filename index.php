@@ -91,6 +91,5 @@ echo $OUTPUT->render($summary);
 
 $table = new \local_apprenticeoffjob\activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 $table->print_table();
-// echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 
 echo $OUTPUT->footer();

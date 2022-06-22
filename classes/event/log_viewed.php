@@ -22,19 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- namespace local_apprenticeoffjob\event;
+namespace local_apprenticeoffjob\event;
 
- defined('MOODLE_INTERNAL') || die();
 
- /**
-  * The report_loglive report viewed event class.
-  *
-  * @package    local_apprenticeoffjob
-  * @since      Moodle 3.6
-  * @copyright  2020 onwards Solent University
-  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-  */
-
+/**
+ * The report_loglive report viewed event class.
+ *
+ * @package    local_apprenticeoffjob
+ * @since      Moodle 3.6
+ * @copyright  2020 onwards Solent University
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class log_viewed extends \core\event\base {
 
     /**

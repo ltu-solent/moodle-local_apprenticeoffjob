@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2022062100;   // The (date) version of this plugin
-$plugin->requires = 2018120304;   // Requires this Moodle version
+$plugin->version  = 2022062100;
+$plugin->requires = 2018120304;
 $plugin->component = 'local_apprenticeoffjob';

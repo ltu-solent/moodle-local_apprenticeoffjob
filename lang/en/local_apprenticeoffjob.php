@@ -51,7 +51,7 @@ $string['deleteconfirm'] = 'Are you sure you wish to delete this activity?';
 $string['details'] = 'Details';
 $string['edit'] = 'Edit';
 $string['editactivity'] = 'Edit activity';
-$string['errnumeric']='You must enter a number here.';
+$string['errnumeric'] = 'You must enter a number here.';
 $string['expectedhourstotal'] = '<p>Total expected hours: {$a->expectedhours}</p>';
 
 $string['hours'] = 'Hours';

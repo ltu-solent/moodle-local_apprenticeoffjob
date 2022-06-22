@@ -22,19 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- namespace local_apprenticeoffjob\event;
+namespace local_apprenticeoffjob\event;
 
- defined('MOODLE_INTERNAL') || die();
 
- /**
-  * The local_apprenticeoffjob activity edited event class.
-  *
-  * @package    local_apprenticeoffjob
-  * @since      Moodle 3.6
-  * @copyright  2020 onwards Solent University
-  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-  */
-
+/**
+ * The local_apprenticeoffjob activity edited event class.
+ *
+ * @package    local_apprenticeoffjob
+ * @since      Moodle 3.6
+ * @copyright  2020 onwards Solent University
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class activity_edited extends \core\event\base {
 
     /**
@@ -71,7 +69,7 @@ class activity_edited extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/local/apprenticeoffjob/edit.php', array('id'=>$this->other['activityid']));
+        return new \moodle_url('/local/apprenticeoffjob/edit.php', array('id' => $this->other['activityid']));
     }
 
 }
