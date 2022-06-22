@@ -88,6 +88,9 @@ $activities = \local_apprenticeoffjob\api::get_user_activities($student->id, $ex
 
 $summary = new \local_apprenticeoffjob\output\summary($student, $totalexpectedhours, $totalactualhours);
 echo $OUTPUT->render($summary);
-echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
+
+$table = new \local_apprenticeoffjob\activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
+$table->print_table();
+// echo activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
 
 echo $OUTPUT->footer();

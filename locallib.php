@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apprenticeoffjob\activities_table;
 use local_apprenticeoffjob\api;
 
 defined('MOODLE_INTERNAL') || die();
@@ -77,65 +78,19 @@ function save_activity($formdata) {
     return api::save_activity($formdata);
 }
 
+/**
+ * Create table
+ * @deprecated version
+ * @param array $activities
+ * @param bool $reportviewer
+ * @param object $student
+ * @param array $expectedhours
+ * @param array $actualhours
+ * @return string HTML
+ */
 function activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours) {
-    global $USER;
-    $activitytypes = array();
-
-    foreach ($activities as $k => $v) {
-        $activitytypes[$v->activitytype] = $v->activityname;
-    }
-
-    $activitytypes = array_unique($activitytypes);
-
-    // Main header row.
-    $table = new html_table();
-    $table->attributes['class'] = 'generaltable boxaligncenter';
-    $table->cellpadding = 5;
-    $table->id = 'apprenticeoffjob';
-    if ($student->id == $USER->id) {
-        $table->head = array('Date', 'Course/Module', 'Details', 'Hours', '');
-        $table->colclasses = array('', '', '', '', 'editcol');
-    } else {
-        if ($reportviewer == true) {
-            $table->head = array('Date', 'Course/Module', 'Details', 'Hours');
-        }
-    }
-    // Activity header rows.
-    foreach ($activitytypes as $type => $v) {
-        $row = new html_table_row();
-        $row->attributes['class'] = 'activityheader';
-        $cell1 = new html_table_cell($v);
-        $cell1->colspan = 3;
-
-        if ($expectedhours) {
-            if (isset($actualhours)) {
-                $actual = array_key_exists($type, $actualhours) ? $actualhours[$type] : 0;
-            } else {
-                $actual = 0;
-            }
-            $cell2 = new html_table_cell($actual . '/' . $expectedhours[$type]);
-        } else {
-            $cell2 = new html_table_cell();
-        }
-        $cell2->attributes['class'] = 'cell-align-right';
-        if ($student->id == $USER->id) {
-            $cell3 = new html_table_cell();
-            $cell3->attributes['class'] = 'editcol';
-            $row->cells = array($cell1, $cell2, $cell3);
-        } else {
-            $row->cells = array($cell1, $cell2);
-        }
-        $table->data[] = $row;
-
-        foreach ($activities as $activity) {
-            if ($activity->activitydate != null) {
-                if ($activity->activityname == $v) {
-                    $table->data[] = activity_row($activity, $USER, $reportviewer, $student->id);
-                }
-            }
-        }
-    }
-    return html_writer::table($table);
+    $table = new activities_table($activities, $reportviewer, $student, $expectedhours, $actualhours);
+    return $table->print_table(false);
 }
 
 /**
@@ -181,6 +136,7 @@ function report_exists() {
 /**
  * Generate activity row
  *
+ * @deprecated version
  * @param object $activity
  * @param object $student
  * @param bool $reportviewer

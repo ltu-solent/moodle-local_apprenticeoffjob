@@ -79,7 +79,7 @@ class api {
        if (count($expectedhours) == 0) {
    
            $activities = $DB->get_records_sql("SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                   a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
+                   a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname, a.userid
                    FROM {local_apprentice} a
                    JOIN {local_apprenticeactivities} aa ON a.activitytype = aa.id
                    JOIN {course} c ON c.id = a.course
@@ -87,7 +87,7 @@ class api {
                    ORDER BY a.activitytype", ['studentid' => $studentid]);
        } else {
            $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
-                   a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname
+                   a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname, c.fullname, a.userid
                    FROM {report_apprentice} r
                    JOIN {local_apprenticeactivities} aa ON aa.id = r.activityid
                    LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = :userid
