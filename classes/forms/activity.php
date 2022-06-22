@@ -15,23 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display a user grade report for all courses
+ * Activity form
  *
- * @package    local
- * @subpackage apprenticeoffjob
- * @copyright  2020 onwards Solent University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_apprenticeoffjob
+ * @author    Mark Sharp <mark.sharp@solent.ac.uk>
+ * @copyright 2022 Solent University {@link https://www.solent.ac.uk}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-defined('MOODLE_INTERNAL') || die();
+
+namespace local_apprenticeoffjob\forms;
 
 require_once("$CFG->libdir/formslib.php");
 
+use lang_string;
 use \local_apprenticeoffjob\api;
+use moodleform;
+
 class activity extends moodleform {
     public function definition() {
         $mform = $this->_form;
-        $courses = \local_apprenticeoffjob\api::get_apprentice_courses();
+        $courses = api::get_apprentice_courses();
         $courseoptions = array();
         foreach ($courses as $c) {
             $courseoptions[$c->courseid] = $c->fullname;
@@ -70,20 +73,5 @@ class activity extends moodleform {
         $mform->setType('activityupdate', PARAM_INT);
 
         $this->add_action_buttons();
-    }
-}
-
-class deleteform extends moodleform {
-    public function definition() {
-        global $OUTPUT;
-        $mform = $this->_form;
-        $mform->addElement('html', $OUTPUT->notification(get_string('deleteconfirm', 'local_apprenticeoffjob')));
-        $mform->addElement('html', '<p>Date: ' . $this->_customdata['activity']->activitydate. '</p>');
-        $mform->addElement('html', '<p>Details: ' . $this->_customdata['activity']->activitydetails. '</p>');
-        $mform->addElement('html', '<p>Hours: ' . $this->_customdata['activity']->activityhours. '</p>');
-        $mform->addElement('hidden', 'id', $this->_customdata['activity']->id);
-        $mform->setType('id', PARAM_INT);
-
-        $this->add_action_buttons(true, get_string('buttonyes', 'local_apprenticeoffjob'));
     }
 }

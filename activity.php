@@ -44,7 +44,7 @@ $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new mood
 $PAGE->navbar->add(get_string('newactivity',  'local_apprenticeoffjob'));
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
-$activityform = new activity(null, array());
+$activityform = new \local_apprenticeoffjob\forms\activity(null, array());
 if ($activityform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {

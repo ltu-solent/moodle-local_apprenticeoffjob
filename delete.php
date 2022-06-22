@@ -58,7 +58,7 @@ $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_app
 
 $activity->activitydate = \local_apprenticeoffjob\api::format_date($activity->activitydate);
 
-$deleteform = new deleteform(null, array('activity' => $activity));
+$deleteform = new \local_apprenticeoffjob\forms\delete(null, array('activity' => $activity));
 
 $formdata = array('id' => $activity->id);
 $deleteform->set_data($formdata);

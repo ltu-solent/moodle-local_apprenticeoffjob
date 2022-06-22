@@ -61,7 +61,7 @@ $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_app
 
 
 
-$editform = new activity();
+$editform = new \local_apprenticeoffjob\forms\activity();
 $formdata = array('id' => $activity->id,
                 'course' => $activity->course,
                 'activitytype' => $activity->activitytype,
