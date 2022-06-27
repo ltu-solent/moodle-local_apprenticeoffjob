@@ -37,7 +37,7 @@ class api {
      */
     public static function get_activitytypes() {
         global $DB;
-        return $DB->get_records('local_apprenticeactivities');
+        return $DB->get_records('local_apprenticeactivities', ['status' => 1]);
     }
 
     /**
