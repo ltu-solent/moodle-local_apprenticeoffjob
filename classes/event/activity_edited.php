@@ -41,8 +41,8 @@ class activity_edited extends \core\event\base {
      * @return void
      */
     protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = 0;
+        $this->data['crud'] = 'u';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
     /**

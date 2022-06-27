@@ -40,8 +40,8 @@ class activity_deleted extends \core\event\base {
      * @return void
      */
     protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = 0;
+        $this->data['crud'] = 'd';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
     /**
