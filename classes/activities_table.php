@@ -147,8 +147,8 @@ class activities_table {
     private function activityrow($activity): html_table_row {
         $row = new html_table_row();
         $cell1 = $this->cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
-        $cell2 = $this->cell($activity->fullname);
-        $cell3 = $this->cell($activity->activitydetails);
+        $cell2 = $this->cell(s($activity->fullname));
+        $cell3 = $this->cell(text_to_html($activity->activitydetails, null, false));
         $cell4 = $this->cell($activity->activityhours, 'cell-align-right');
         $row->cells = [$cell1, $cell2, $cell3, $cell4];
         if ($this->hasactioncol) {

@@ -55,7 +55,8 @@ class activity extends moodleform {
         $mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
         $mform->setType('activitydate', PARAM_INT);
 
-        $mform->addElement('text', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'));
+        $textareaoptions = ['cols' => 60, 'rows' => 10, 'style' => 'resize: both;'];
+        $mform->addElement('textarea', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'), $textareaoptions);
         $mform->setType('activitydetails', PARAM_TEXT );
         $mform->addRule('activitydetails', new lang_string('required'), 'required', null, 'client');
         $mform->addHelpButton('activitydetails', 'activitydetailshelp', 'local_apprenticeoffjob');
