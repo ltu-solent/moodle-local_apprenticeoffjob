@@ -29,7 +29,11 @@ use advanced_testcase;
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
-class locallib_testcase extends advanced_testcase {
+/**
+ * Test locallib.php functions.
+ * @coversNothing
+ */
+class locallib_test extends advanced_testcase {
 
     public function test_get_apprentice_courses() {
         $this->resetAfterTest();

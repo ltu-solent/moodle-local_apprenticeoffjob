@@ -26,7 +26,7 @@
 require('../../config.php');
 require_login();
 
-if (!isloggedin() or isguestuser()) {
+if (!isloggedin() || isguestuser()) {
     if (empty($SESSION->wantsurl)) {
         $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
     }

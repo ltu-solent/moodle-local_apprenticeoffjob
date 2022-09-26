@@ -27,6 +27,8 @@ namespace local_apprenticeoffjob\forms;
 
 use moodleform;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->libdir/formslib.php");
 
 class delete extends moodleform {

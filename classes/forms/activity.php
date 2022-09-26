@@ -25,6 +25,8 @@
 
 namespace local_apprenticeoffjob\forms;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->libdir/formslib.php");
 
 use lang_string;
@@ -46,17 +48,18 @@ class activity extends moodleform {
             $activityoptions[$type->id] = $type->activityname;
         }
 
-        $mform->addElement('select', 'course', get_string('course',  'local_apprenticeoffjob'), $courseoptions);
+        $mform->addElement('select', 'course', get_string('course', 'local_apprenticeoffjob'), $courseoptions);
         $mform->setType('course', PARAM_INT);
 
-        $mform->addElement('select', 'activitytype', get_string('activitytype',  'local_apprenticeoffjob'), $activityoptions);
+        $mform->addElement('select', 'activitytype', get_string('activitytype', 'local_apprenticeoffjob'), $activityoptions);
         $mform->setType('activitytype', PARAM_INT);
 
-        $mform->addElement('date_selector', 'activitydate', get_string('activitydate',  'local_apprenticeoffjob'));
+        $mform->addElement('date_selector', 'activitydate', get_string('activitydate', 'local_apprenticeoffjob'));
         $mform->setType('activitydate', PARAM_INT);
 
         $textareaoptions = ['cols' => 60, 'rows' => 10, 'style' => 'resize: both;'];
-        $mform->addElement('textarea', 'activitydetails', get_string('activitydetails',  'local_apprenticeoffjob'), $textareaoptions);
+        $mform->addElement('textarea', 'activitydetails', get_string('activitydetails', 'local_apprenticeoffjob'),
+            $textareaoptions);
         $mform->setType('activitydetails', PARAM_TEXT );
         $mform->addRule('activitydetails', new lang_string('required'), 'required', null, 'client');
         $mform->addHelpButton('activitydetails', 'activitydetailshelp', 'local_apprenticeoffjob');

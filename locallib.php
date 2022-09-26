@@ -26,8 +26,6 @@
 use local_apprenticeoffjob\activities_table;
 use local_apprenticeoffjob\api;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Undocumented function
  * @deprecated version
@@ -147,8 +145,7 @@ function activity_row($activity, $student, $reportviewer, $studentid) {
     $row = new html_table_row();
     $time = new DateTime('now', core_date::get_user_timezone_object());
     $time = DateTime::createFromFormat('U', $activity->activitydate);
-    // $timezone = core_date::get_user_timezone($time);
-    // $activitydate = $time->getOffset();
+
     $cell1 = new html_table_cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
     $cell2 = new html_table_cell($activity->fullname);
     $cell3 = new html_table_cell($activity->activitydetails);
