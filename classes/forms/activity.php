@@ -33,7 +33,16 @@ use lang_string;
 use \local_apprenticeoffjob\api;
 use moodleform;
 
+/**
+ * Activity form filled out by student
+ */
 class activity extends moodleform {
+
+    /**
+     * Field definitions for form
+     *
+     * @return void
+     */
     public function definition() {
         $mform = $this->_form;
         $courses = api::get_apprentice_courses();

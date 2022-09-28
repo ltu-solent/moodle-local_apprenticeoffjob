@@ -31,7 +31,15 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
 
+/**
+ * Delete confirmation dialog.
+ */
 class delete extends moodleform {
+    /**
+     * Field definitions for form
+     *
+     * @return void
+     */
     public function definition() {
         global $OUTPUT;
         $mform = $this->_form;

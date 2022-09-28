@@ -31,16 +31,58 @@ use html_table_row;
 use html_writer;
 use moodle_url;
 
-
+/**
+ * Activities table displays all student's recorded activities.
+ */
 class activities_table {
 
+    /**
+     * List of activity objects
+     *
+     * @var array
+     */
     private $activities;
+    /**
+     * Is this a viewer only
+     *
+     * @var bool
+     */
     private $reportviewer;
+    /**
+     * User object for selected studetn
+     *
+     * @var stdClass
+     */
     private $student;
+    /**
+     * Expected hours grouped by activity type
+     *
+     * @var array
+     */
     private $expectedhours;
+    /**
+     * Actual hours grouped by activity type
+     *
+     * @var array
+     */
     private $actualhours;
+    /**
+     * Activity type names
+     *
+     * @var array
+     */
     private $activitytypes = [];
+    /**
+     * Table object
+     *
+     * @var html_table
+     */
     private $table;
+    /**
+     * Display the action column?
+     *
+     * @var boolean
+     */
     private $hasactioncol = false;
 
     /**

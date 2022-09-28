@@ -17,8 +17,7 @@
 /**
  * Student data entry point for apprentice off job hours
  *
- * @package    local
- * @subpackage apprenticeoffjob
+ * @package    local_apprenticeoffjob
  * @copyright  2020 onwards Solent University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

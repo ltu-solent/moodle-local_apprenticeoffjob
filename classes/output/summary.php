@@ -32,14 +32,29 @@ use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-
+/**
+ * Summary displayed on landing page.
+ */
 class summary implements renderable, templatable {
+    /**
+     * Constructor
+     *
+     * @param object $student User object
+     * @param float $totalexpectedhours
+     * @param float $totalactualhours
+     */
     public function __construct($student, float $totalexpectedhours, float $totalactualhours) {
         $this->student = $student;
         $this->totalexpectedhours = $totalexpectedhours;
         $this->totalactualhours = $totalactualhours;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param renderer_base $output
+     * @return stdClass
+     */
     public function export_for_template(renderer_base $output) {
         global $USER;
         $summary = new stdClass();

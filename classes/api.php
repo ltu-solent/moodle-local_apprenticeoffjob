@@ -29,6 +29,9 @@ use core_date;
 use DateTime;
 use stdClass;
 
+/**
+ * Selection of helper functions
+ */
 class api {
     /**
      * Get activity types
