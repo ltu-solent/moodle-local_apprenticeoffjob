@@ -32,6 +32,7 @@ global $CFG;
 /**
  * Test locallib.php functions.
  * @coversNothing
+ * @group sol
  */
 class locallib_test extends advanced_testcase {
 
