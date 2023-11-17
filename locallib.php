@@ -121,16 +121,6 @@ function get_filename($contextid) {
 }
 
 /**
- * Report tables exists.
- *
- * @deprecated 2022062100 report_apprenticeoffjob has a dependency on this, so this function is superfluous.
- * @return bool
- */
-function report_exists() {
-    return api::report_exists();
-}
-
-/**
  * Generate activity row
  *
  * @deprecated version
