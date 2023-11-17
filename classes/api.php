@@ -188,7 +188,7 @@ class api {
      */
     public static function delete_activity($formdata) {
         global $DB;
-        $deleted = $DB->delete_records('local_apprentice', array('id' => $formdata->id));
+        $deleted = $DB->delete_records('local_apprentice', ['id' => $formdata->id]);
         return $deleted;
     }
 
@@ -224,7 +224,7 @@ class api {
             [
                 'contextid' => $contextid,
                 'filearea' => 'apprenticeoffjob',
-                'filesize' => 0
+                'filesize' => 0,
             ]);
         return $filename ?? '';
     }

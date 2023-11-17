@@ -115,7 +115,7 @@ class activities_table {
             get_string('date', 'local_apprenticeoffjob'),
             get_string('course', 'local_apprenticeoffjob'),
             get_string('details', 'local_apprenticeoffjob'),
-            get_string('hours', 'local_apprenticeoffjob')
+            get_string('hours', 'local_apprenticeoffjob'),
         ];
         $colclasses = ['', '', '', ''];
         if ($this->hasactioncol) {
@@ -199,14 +199,14 @@ class activities_table {
                 new moodle_url('/local/apprenticeoffjob/edit.php', $params),
                 get_string('edit', 'local_apprenticeoffjob'),
                 [
-                    'class' => 'btn btn-secondary'
+                    'class' => 'btn btn-secondary',
                 ]
             );
             $deletebutton = html_writer::link(
                 new moodle_url('/local/apprenticeoffjob/delete.php', $params),
                 get_string('delete', 'local_apprenticeoffjob'),
                 [
-                    'class' => 'btn btn-secondary'
+                    'class' => 'btn btn-secondary',
                 ]
             );
             $cell5 = $this->cell($editbutton . ' ' . $deletebutton, 'cell-align-right');

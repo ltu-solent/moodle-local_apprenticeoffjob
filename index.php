@@ -51,7 +51,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 
 // Check if we're the student viewing or someone with capability from a report.
-$student = $DB->get_record('user', array('id' => $studentid));
+$student = $DB->get_record('user', ['id' => $studentid]);
 
 // A student should be able to see their own report even if they have a courseid in the params.
 // So only require this capability of the given studentid is not the same as the logged in user.
@@ -60,19 +60,19 @@ if ($courseid > 0 && $USER->id != $student->id) {
     require_capability('report/apprenticeoffjob:view', $context);
     $reportviewer = true;
     // Trigger a course context event when the log for a user in a course is being viewed.
-    $event = \local_apprenticeoffjob\event\log_viewed::create(array(
+    $event = \local_apprenticeoffjob\event\log_viewed::create([
       'context' => $context,
       'relateduserid' => $student->id,
-      'userid' => $USER->id
-    ));
+      'userid' => $USER->id,
+    ]);
     $event->trigger();
 } else {
     // Trigger a log viewed event when user's viewing their own report.
     $usercontext = context_user::instance($USER->id);
-    $event = \local_apprenticeoffjob\event\log_viewed::create(array(
+    $event = \local_apprenticeoffjob\event\log_viewed::create([
         'context' => $usercontext,
-        'userid' => $USER->id
-    ));
+        'userid' => $USER->id,
+    ]);
     $event->trigger();
 }
 

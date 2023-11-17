@@ -69,7 +69,7 @@ class activity_edited extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/local/apprenticeoffjob/edit.php', array('id' => $this->other['activityid']));
+        return new \moodle_url('/local/apprenticeoffjob/edit.php', ['id' => $this->other['activityid']]);
     }
 
 }

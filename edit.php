@@ -44,11 +44,11 @@ if ($studentid > 0 && $studentid != $USER->id) {
 
 $activity = $DB->get_record('local_apprentice', [
         'id' => $activityid,
-        'userid' => $studentid
+        'userid' => $studentid,
     ], '*', MUST_EXIST);
 
 $PAGE->set_context(context_user::instance($USER->id));
-$PAGE->set_url('/local/apprenticeoffjob/edit.php', array('id' => $activityid));
+$PAGE->set_url('/local/apprenticeoffjob/edit.php', ['id' => $activityid]);
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
@@ -59,14 +59,15 @@ $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_app
 
 
 $editform = new \local_apprenticeoffjob\forms\activity();
-$formdata = array('id' => $activity->id,
-                'course' => $activity->course,
-                'activitytype' => $activity->activitytype,
-                'activitydate' => $activity->activitydate,
-                'activitydetails' => $activity->activitydetails,
-                'activityhours' => $activity->activityhours,
-                'activityupdate' => 1
-                );
+$formdata = [
+    'id' => $activity->id,
+    'course' => $activity->course,
+    'activitytype' => $activity->activitytype,
+    'activitydate' => $activity->activitydate,
+    'activitydetails' => $activity->activitydetails,
+    'activityhours' => $activity->activityhours,
+    'activityupdate' => 1,
+];
 $editform->set_data($formdata);
 if ($editform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
@@ -75,13 +76,13 @@ if ($editform->is_cancelled()) {
     if ($saveactivity == true) {
         // Trigger a log viewed event.
         $usercontext = context_user::instance($USER->id);
-        $event = \local_apprenticeoffjob\event\activity_edited::create(array(
+        $event = \local_apprenticeoffjob\event\activity_edited::create([
                     'context' => $usercontext,
                     'userid' => $USER->id,
-                    'other' => array(
-                        'activityid' => $formdata->id
-                    )
-                ));
+                    'other' => [
+                        'activityid' => $formdata->id,
+                    ],
+                ]);
         $event->trigger();
 
         redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);

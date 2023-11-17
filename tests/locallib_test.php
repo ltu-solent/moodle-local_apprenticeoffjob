@@ -53,17 +53,17 @@ class locallib_test extends advanced_testcase {
         // Current module category structure.
         $cats['courses'] = $this->getDataGenerator()->create_category([
             'name' => 'Courses',
-            'parent' => 0
+            'parent' => 0,
         ]);
         $cats['courses/FSHSS'] = $this->getDataGenerator()->create_category([
             'name' => 'Faculty of Sport, Health and Social Sciences',
             'parent' => $cats['courses']->id,
-            'idnumber' => 'FSHSS'
+            'idnumber' => 'FSHSS',
         ]);
         $cats['courses/FSHSS/ModulePages'] = $this->getDataGenerator()->create_category([
             'name' => 'Module Pages',
             'parent' => $cats['courses/FSHSS']->id,
-            'idnumber' => 'modules_current_FSHSS'
+            'idnumber' => 'modules_current_FSHSS',
         ]);
 
         // Current modules.
@@ -73,7 +73,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC101_123456789',
             'category' => $cats['courses/FSHSS/ModulePages']->id,
             'startdate' => $currentstartdate,
-            'enddate' => $currenenddate
+            'enddate' => $currenenddate,
         ]);
 
         $this->getDataGenerator()->enrol_user(
@@ -94,7 +94,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC102_123456789',
             'category' => $cats['courses/FSHSS/ModulePages']->id,
             'startdate' => $currentstartdate,
-            'enddate' => $currenenddate
+            'enddate' => $currenenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -111,7 +111,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC102_456789123',
             'category' => $cats['courses/FSHSS/ModulePages']->id,
             'startdate' => $futurestartdate,
-            'enddate' => $futureenddate
+            'enddate' => $futureenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -122,7 +122,7 @@ class locallib_test extends advanced_testcase {
         $cats['courses/FSHSS/CoursePages'] = $this->getDataGenerator()->create_category([
             'name' => 'Course Pages',
             'parent' => $cats['courses/FSHSS']->id,
-            'idnumber' => 'courses_FSHSS'
+            'idnumber' => 'courses_FSHSS',
         ]);
 
         $courses['BAABC'] = $this->getDataGenerator()->create_course([
@@ -130,7 +130,7 @@ class locallib_test extends advanced_testcase {
             'shortname' => 'BAABC',
             'idnumber' => 'BAABC',
             'category' => $cats['courses/FSHSS/CoursePages']->id,
-            'startdate' => $currentstartdate
+            'startdate' => $currentstartdate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -145,7 +145,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'BABCD',
             'category' => $cats['courses/FSHSS/CoursePages']->id,
             'startdate' => $currentstartdate,
-            'visible' => 0
+            'visible' => 0,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -159,7 +159,7 @@ class locallib_test extends advanced_testcase {
             'shortname' => 'BACDE',
             'idnumber' => 'BACDE',
             'category' => $cats['courses/FSHSS/CoursePages']->id,
-            'startdate' => $currentstartdate
+            'startdate' => $currentstartdate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student2->id,
@@ -171,16 +171,16 @@ class locallib_test extends advanced_testcase {
         // Archived modules category structure.
         $cats['archive'] = $this->getDataGenerator()->create_category([
             'name' => 'Archive',
-            'parent' => 0
+            'parent' => 0,
         ]);
         $cats['archive/2019-20'] = $this->getDataGenerator()->create_category([
             'name' => '2019-20',
-            'parent' => $cats['archive']->id
+            'parent' => $cats['archive']->id,
         ]);
         $cats['archive/2019-20/FSHSS'] = $this->getDataGenerator()->create_category([
             'name' => 'Faculty of Sport, Health and Social Sciences 2019',
             'parent' => $cats['archive/2019-20']->id,
-            'idnumber' => 'modules_2019_FSHSS'
+            'idnumber' => 'modules_2019_FSHSS',
         ]);
 
         // Archived modules.
@@ -190,7 +190,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC101_234567891',
             'category' => $cats['archive/2019-20/FSHSS']->id,
             'startdate' => $paststartdate,
-            'enddate' => $pastenddate
+            'enddate' => $pastenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -206,7 +206,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC102_234567891',
             'category' => $cats['archive/2019-20/FSHSS']->id,
             'startdate' => $paststartdate,
-            'enddate' => $pastenddate
+            'enddate' => $pastenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -220,7 +220,7 @@ class locallib_test extends advanced_testcase {
         $cats['courses/FSHSS/2019ModulePages'] = $this->getDataGenerator()->create_category([
             'name' => '2019 Module Pages',
             'parent' => $cats['archive/2019-20']->id,
-            'idnumber' => 'modules_current_2019_FSHSS'
+            'idnumber' => 'modules_current_2019_FSHSS',
         ]);
         $courses['ABC101_345678912'] = $this->getDataGenerator()->create_course([
             'fullname' => 'Module 1',
@@ -228,7 +228,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC101_345678912',
             'category' => $cats['courses/FSHSS/2019ModulePages']->id,
             'startdate' => $paststartdate,
-            'enddate' => $pastenddate
+            'enddate' => $pastenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -245,7 +245,7 @@ class locallib_test extends advanced_testcase {
             'idnumber' => 'ABC102_345678912',
             'category' => $cats['courses/FSHSS/ModulePages']->id,
             'startdate' => $currentstartdate,
-            'enddate' => $currenenddate
+            'enddate' => $currenenddate,
         ]);
         $this->getDataGenerator()->enrol_user(
             $student1->id,
@@ -260,13 +260,13 @@ class locallib_test extends advanced_testcase {
         $cats['courses/services'] = $this->getDataGenerator()->create_category([
             'name' => 'Services',
             'parent' => $cats['courses']->id,
-            'idnumber' => ''
+            'idnumber' => '',
         ]);
         $courses['accesssolent'] = $this->getDataGenerator()->create_course([
             'fullname' => 'Access Solent',
             'shortname' => 'Access Solent',
             'category' => $cats['courses/services']->id,
-            'startdate' => $currentstartdate
+            'startdate' => $currentstartdate,
         ]);
         $this->getDataGenerator()->enrol_user($student1->id, $courses['accesssolent']->id, 'student');
         $this->getDataGenerator()->enrol_user($student2->id, $courses['accesssolent']->id, 'student');

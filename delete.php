@@ -43,7 +43,7 @@ $activity = $DB->get_record('local_apprentice', ['id' => $activityid, 'userid' =
 
 
 $PAGE->set_context(context_user::instance($USER->id));
-$PAGE->set_url('/local/apprenticeoffjob/delete.php', array('id' => $activityid));
+$PAGE->set_url('/local/apprenticeoffjob/delete.php', ['id' => $activityid]);
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
@@ -54,9 +54,9 @@ $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_app
 
 $activity->activitydate = \local_apprenticeoffjob\api::format_date($activity->activitydate);
 
-$deleteform = new \local_apprenticeoffjob\forms\delete(null, array('activity' => $activity));
+$deleteform = new \local_apprenticeoffjob\forms\delete(null, ['activity' => $activity]);
 
-$formdata = array('id' => $activity->id);
+$formdata = ['id' => $activity->id];
 $deleteform->set_data($formdata);
 if ($deleteform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
@@ -65,13 +65,13 @@ if ($deleteform->is_cancelled()) {
     if ($deleteactivity == true) {
         // Trigger a log viewed event.
         $usercontext = context_user::instance($USER->id);
-        $event = \local_apprenticeoffjob\event\activity_deleted::create(array(
+        $event = \local_apprenticeoffjob\event\activity_deleted::create([
                 'context' => $usercontext,
                 'userid' => $USER->id,
-                'other' => array(
-                    'activityid' => $formdata->id
-                )
-        ));
+                'other' => [
+                    'activityid' => $formdata->id,
+                ],
+        ]);
         $event->trigger();
 
         redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);

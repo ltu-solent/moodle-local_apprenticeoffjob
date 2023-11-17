@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 use lang_string;
-use \local_apprenticeoffjob\api;
+use local_apprenticeoffjob\api;
 use moodleform;
 
 /**
@@ -46,13 +46,13 @@ class activity extends moodleform {
     public function definition() {
         $mform = $this->_form;
         $courses = api::get_apprentice_courses();
-        $courseoptions = array();
+        $courseoptions = [];
         foreach ($courses as $c) {
             $courseoptions[$c->courseid] = $c->fullname;
         }
 
         $activitytypes = api::get_activitytypes();
-        $activityoptions = array();
+        $activityoptions = [];
         foreach ($activitytypes as $type) {
             $activityoptions[$type->id] = $type->activityname;
         }

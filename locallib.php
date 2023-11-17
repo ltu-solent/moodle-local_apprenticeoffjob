@@ -153,19 +153,19 @@ function activity_row($activity, $student, $reportviewer, $studentid) {
     if ($studentid == $student->id) {
         $params = ['id' => $activity->activityid, 'student' => $studentid];
         $editurl = new moodle_url('/local/apprenticeoffjob/edit.php', $params);
-        $editbutton = html_writer::start_tag('a', array('href' => $editurl, 'class' => 'btn btn-secondary'));
+        $editbutton = html_writer::start_tag('a', ['href' => $editurl, 'class' => 'btn btn-secondary']);
         $editbutton .= get_string('edit', 'local_apprenticeoffjob');
         $editbutton .= html_writer::end_tag('a');
         $deleteurl = new moodle_url('/local/apprenticeoffjob/delete.php', $params);
-        $deletebutton = html_writer::start_tag('a', array('href' => $deleteurl, 'class' => 'btn btn-secondary'));
+        $deletebutton = html_writer::start_tag('a', ['href' => $deleteurl, 'class' => 'btn btn-secondary']);
         $deletebutton .= get_string('delete', 'local_apprenticeoffjob');
         $deletebutton .= html_writer::end_tag('a');
         $cell5 = new html_table_cell($editbutton . ' ' . $deletebutton);
         $cell5->attributes['class'] = 'cell-align-right';
-        $row->cells = array($cell1, $cell2, $cell3, $cell4, $cell5);
+        $row->cells = [$cell1, $cell2, $cell3, $cell4, $cell5];
     } else {
         if ($reportviewer == true) {
-            $row->cells = array($cell1, $cell2, $cell3, $cell4);
+            $row->cells = [$cell1, $cell2, $cell3, $cell4];
         }
     }
 

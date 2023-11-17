@@ -41,7 +41,7 @@ $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new mood
 $PAGE->navbar->add(get_string('newactivity',  'local_apprenticeoffjob'));
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
-$activityform = new \local_apprenticeoffjob\forms\activity(null, array());
+$activityform = new \local_apprenticeoffjob\forms\activity(null, []);
 if ($activityform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {
@@ -49,10 +49,10 @@ if ($activityform->is_cancelled()) {
     if (is_int($saveactivity)) {
         // Trigger an activity added event.
         $usercontext = context_user::instance($USER->id);
-        $event = \local_apprenticeoffjob\event\activity_added::create(array(
+        $event = \local_apprenticeoffjob\event\activity_added::create([
                     'context' => $usercontext,
-                    'userid' => $USER->id
-                ));
+                    'userid' => $USER->id,
+                ]);
         $event->trigger();
 
         redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
