@@ -50,19 +50,21 @@ class api {
      */
     public static function get_apprentice_courses() {
         global $DB, $USER;
-
+        $now = time();
         $params = [];
         $unitpages = $DB->sql_like('cc.idnumber', ':unitcat', false, false);
         $params['unitcat'] = "modules_%";
         $coursepages = $DB->sql_like('cc.idnumber', ':coursecat', false, false);
         $params['coursecat'] = "courses_%";
         $params['userid'] = $USER->id;
+        $params['startdate'] = $now;
+        $params['timestart'] = $now;
         $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
                                     FROM {enrol} e
                                     JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = :userid
-                                    JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.startdate < UNIX_TIMESTAMP()
+                                    JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.startdate < :startdate
                                     JOIN {course_categories} cc ON cc.id = c.category
-                                    WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < UNIX_TIMESTAMP()
+                                    WHERE ue.status = 0 AND e.status = 0 AND ue.timestart < :timestart
                                     AND ({$unitpages} OR {$coursepages})";
 
         $courses = $DB->get_records_sql($sql, $params);
