@@ -37,6 +37,24 @@ use templatable;
  */
 class summary implements renderable, templatable {
     /**
+     * Student object
+     *
+     * @var object
+     */
+    private $student;
+    /**
+     * Total expected hours
+     *
+     * @var float
+     */
+    private $totalexpectedhours;
+    /**
+     * Total actual hours records
+     *
+     * @var float
+     */
+    private $totalactualhours;
+    /**
      * Constructor
      *
      * @param object $student User object
