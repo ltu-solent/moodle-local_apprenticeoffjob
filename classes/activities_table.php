@@ -146,7 +146,7 @@ class activities_table {
                 }
             }
             if ($activitycount == 0) {
-                $this->table->data[] = $this->nonerecordedrow();
+                $this->table->data[] = $this->nonerecordedrow($actname);
             }
         }
     }
@@ -159,7 +159,8 @@ class activities_table {
      */
     private function activitytyperow($activitytype): html_table_row {
         $row = new html_table_row();
-        $row->attributes['class'] = 'activityheader';
+        $activityclass = $this->slugify($this->activitytypes[$activitytype]);
+        $row->attributes['class'] = 'activityheader activity-' . $activityclass;
         $cell1 = $this->cell($this->activitytypes[$activitytype]);
         $cell1->colspan = 3;
         if ($this->expectedhours) {
@@ -188,6 +189,8 @@ class activities_table {
      */
     private function activityrow($activity): html_table_row {
         $row = new html_table_row();
+        $activityclass = $this->slugify($activity->activityname);
+        $row->attributes['class'] = 'activity activity-' . $activityclass;
         $cell1 = $this->cell(userdate($activity->activitydate, get_string('strftimedaydate', 'langconfig')));
         $cell2 = $this->cell(s($activity->fullname));
         $cell3 = $this->cell(text_to_html($activity->activitydetails, null, false));
@@ -235,7 +238,7 @@ class activities_table {
      *
      * @return html_table_row
      */
-    private function nonerecordedrow(): html_table_row {
+    private function nonerecordedrow($activity): html_table_row {
         $span = 4;
         if ($this->hasactioncol) {
             $span = 5;
@@ -243,6 +246,8 @@ class activities_table {
         $cell = $this->cell(get_string('nonerecorded', 'local_apprenticeoffjob'));
         $cell->colspan = $span;
         $row = new html_table_row([$cell]);
+        $activityclass = $this->slugify($activity);
+        $row->attributes['class'] = 'activity noactivity-' . $activityclass;
         return $row;
     }
 
@@ -258,5 +263,28 @@ class activities_table {
             return $table;
         }
         echo $table;
+    }
+
+    /**
+     * Create machine-friendly class from name
+     *
+     * @param string $text
+     * @return string
+     */
+    private function slugify ($text): string {
+        // Replace non letter or digits by -.
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        // Transliterate.
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        // Remove unwanted characters.
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        // Remove duplicate -.
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+        if (empty($text)) {
+            return 'n-a';
+        }
+        return $text;
     }
 }

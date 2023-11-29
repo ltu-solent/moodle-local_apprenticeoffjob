@@ -171,11 +171,12 @@ class api {
         $date = new DateTime("now", core_date::get_user_timezone_object());
         $date->setTime(0, 0, 0);
 
-        if ($formdata->activityupdate == 1) {
+        if (isset($formdata->id) && $formdata->id > 0) {
             $activity->id = $formdata->id;
             $activity->timemodified = $date->getTimestamp();
             $activityid = $DB->update_record('local_apprentice', $activity, true);
         } else {
+            $activity->timemodified = $date->getTimestamp();
             $activity->timecreated = $date->getTimestamp();
             $activityid = $DB->insert_record('local_apprentice', $activity, true);
         }
