@@ -34,7 +34,7 @@ global $CFG;
  * @coversNothing
  * @group sol
  */
-class locallib_test extends advanced_testcase {
+class api_test extends advanced_testcase {
 
     public function test_get_apprentice_courses() {
         $this->resetAfterTest();
