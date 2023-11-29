@@ -236,6 +236,7 @@ class activities_table {
     /**
      * Returns a row with "None recorded" message to highlight no entries for given type.
      *
+     * @param string $activity Activity name
      * @return html_table_row
      */
     private function nonerecordedrow($activity): html_table_row {
@@ -271,7 +272,7 @@ class activities_table {
      * @param string $text
      * @return string
      */
-    private function slugify ($text): string {
+    private function slugify($text): string {
         // Replace non letter or digits by -.
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
         // Transliterate.
