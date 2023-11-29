@@ -80,9 +80,10 @@ class api {
      */
     public static function get_user_activities($studentid, $expectedhours) {
         global $DB;
+        $random = self::db_random();
         // Expected hours are set by the teacher. If there are none, it's still possible the student has entered something.
         if (count($expectedhours) == 0) {
-            $activities = $DB->get_records_sql("SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
+            $activities = $DB->get_records_sql("SELECT {$random} idx,
                    a.id activityid, a.activitydate, a.activitytype, a.activitydetails, a.activityhours, aa.activityname,
                    c.fullname, a.userid
                    FROM {local_apprentice} a
@@ -91,7 +92,7 @@ class api {
                    WHERE a.userid = :studentid
                    ORDER BY a.activitytype", ['studentid' => $studentid]);
         } else {
-            $activities = $DB->get_records_sql('SELECT (FLOOR( 1 + RAND( ) *5000 )) id,
+            $activities = $DB->get_records_sql("SELECT {$random} idx,
                    a.id activityid, a.activitydate, aa.id activitytype, a.activitydetails, a.activityhours, aa.activityname,
                    c.fullname, a.userid
                    FROM {report_apprentice} r
@@ -99,7 +100,7 @@ class api {
                    LEFT OUTER JOIN {local_apprentice} a ON a.activitytype = r.activityid AND a.userid = :userid
                    LEFT JOIN {course} c ON c.id = a.course
                    WHERE r.studentid = :studentid
-                   ORDER BY r.id, a.activitytype', ['userid' => $studentid, 'studentid' => $studentid]);
+                   ORDER BY r.id, a.activitytype", ['userid' => $studentid, 'studentid' => $studentid]);
         }
         return $activities;
     }
@@ -242,5 +243,24 @@ class api {
         global $DB;
         $dbman = $DB->get_manager();
         return $dbman->table_exists('report_apprentice');
+    }
+
+    /**
+     * Return database specific random function
+     *
+     * @return string
+     */
+    private static function db_random() {
+        global $DB;
+        switch ($DB->get_dbfamily()) {
+            case 'oracle':
+                return ' dbms_random.value ';
+            case 'postgres':
+                return ' RANDOM() ';
+            case 'mssql':
+                return ' NEWID() ';
+            default:
+                return ' RAND() ';
+        }
     }
 }
