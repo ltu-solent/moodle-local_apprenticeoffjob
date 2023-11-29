@@ -199,4 +199,3 @@ Feature: Record offjob activities
     And I should see "Hours left to complete: 29.5"
     And I should see "1.00/10" in the ".activity-teaching-of-theory" "css_element"
     And "module-1-teaching-of-theory-2023-03-02" "table_row" should not exist
-    Then I should see "wawa"
