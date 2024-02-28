@@ -101,7 +101,7 @@ class activities_table {
         $this->student = $student;
         $this->expectedhours = $expectedhours;
         $this->actualhours = $actualhours;
-        // TODO: Allow others to see the action menu with capabilities.
+        // SOL-TODO: Allow others to see the action menu with capabilities.
         $this->hasactioncol = ($this->student->id == $USER->id);
         foreach ($activities as $activity) {
             if (!isset($this->activitytypes[$activity->activitytype])) {
