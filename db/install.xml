@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/apprenticeoffjob/db" VERSION="20180326" COMMENT="XMLDB file for Moodle local/apprenticeoffjob"
+<XMLDB PATH="local/apprentice/db" VERSION="20180326" COMMENT="XMLDB file for Moodle local/apprenticeoffjob"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
     <TABLE NAME="local_apprentice" COMMENT="Logs for apprentice off job activities">
@@ -18,7 +18,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this activity."/>
-        <KEY NAME="activitytype" TYPE="foreign" FIELDS="activitytype" REFTABLE="local_apprenticeoffjob_activities" REFFIELDS="id"/>
+        <KEY NAME="activitytype" TYPE="foreign" FIELDS="activitytype" REFTABLE="local_apprenticeactivities" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="local_apprenticeactivities" COMMENT="Activities for apprentice off job log">
