@@ -15,15 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display a user grade report for all courses
+ * TODO describe file settings
  *
  * @package    local_apprenticeoffjob
- * @copyright  2020 onwards Solent University
+ * @copyright  2024 Solent University {@link https://www.solent.ac.uk}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2024051501;
-$plugin->requires = 2018120304;
-$plugin->component = 'local_apprenticeoffjob';
+$parent = new admin_category('local_apprenticeoffjobcat', new lang_string('pluginname', 'local_apprenticeoffjob'));
+if ($hassiteconfig) {
+    $ADMIN->add('localplugins', $parent);
+
+    $name = 'local_apprenticeoffjob/manageactivitytypes';
+    $title = new lang_string('manageactivitytypes', 'local_apprenticeoffjob');
+    $url = new moodle_url('/local/apprenticeoffjob/manageactivitytypes.php');
+    $externalpage = new admin_externalpage($name, $title, $url);
+
+    $ADMIN->add('local_apprenticeoffjobcat', $externalpage);
+}

@@ -31,6 +31,7 @@ $string['activitydetailshelp'] = 'Enter brief details, explaining what you did.'
 $string['activitydetailshelp_help'] = 'Enter brief details, explaining what you did.';
 $string['activityedited'] = 'Activity edited';
 $string['activityhours'] = 'Time spent on activity (in hours)';
+$string['activityname'] = 'Activity name';
 $string['activitynotdeleted'] = 'Activity not deleted';
 $string['activitynotsaved'] = 'Activity not saved';
 $string['activitysaved'] = 'Activity saved';
@@ -47,9 +48,12 @@ $string['date'] = 'Date';
 $string['delete'] = 'Delete';
 $string['deleteactivity'] = 'Delete activity';
 $string['deleteconfirm'] = 'Are you sure you wish to delete this activity?';
+$string['deleteduser'] = 'User deleted';
 $string['details'] = 'Details';
 $string['edit'] = 'Edit';
 $string['editactivity'] = 'Edit activity';
+$string['editactivitytype'] = 'Edit activity type';
+$string['enabled'] = 'Enabled';
 $string['errnumeric'] = 'You must enter a number here.';
 $string['expectedhourstotal'] = '<p>Total expected hours: {$a->expectedhours}</p>';
 
@@ -57,14 +61,27 @@ $string['hours'] = 'Hours';
 $string['hoursleft'] = '<p>Hours left to complete: {$a->hoursleft}</p>';
 $string['hourshelp'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
 $string['hourshelp_help'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
-$string['logviewed'] = 'Log viewed';
-$string['newactivity'] = 'New activity';
 
+$string['invalidactivitytypeid'] = 'Invalid activity type';
+
+$string['lastmodified'] = 'Last modified';
+$string['logviewed'] = 'Log viewed';
+
+$string['manageactivitytypes'] = 'Manage activity types';
+$string['modifiedby'] = 'Modified by';
+
+$string['newactivity'] = 'New activity';
+$string['newactivitytype'] = 'New activity type';
+$string['newsavedactivitytype'] = 'New activity type created';
 $string['noeditpermissions'] = 'You do not have permissions to edit this activity.';
 $string['nonerecorded'] = 'None recorded';
 $string['nopermission'] = 'You do not have permission to do that.';
+$string['notenabled'] = 'Not enabled';
+
 $string['print'] = 'Print this page';
 $string['statement1'] = '<p>Off-the-job training is a statutory requirement for an English apprenticeship and must make up at least 20% of an apprentice’s normal working hours (paid hours excluding overtime) over the planned duration of the apprenticeship.</p><p>It is training which is received by the apprentice, during the apprentice’s normal working hours, for the purpose of achieving the knowledge, skills and behaviours of the approved apprenticeship referenced in the apprenticeship agreement.</p>';
 $string['statement2'] = 'By submitting this form, I confirm that the following activity details were completed during my normal working hours (paid hours excluding overtime)';
 $string['statement3'] = 'By submitting this log, I confirm that the following activity details were completed during my normal working hours (paid hours excluding overtime)';
 $string['totalhours'] = '<h3>Summary of hours</h3>';
+
+$string['updatedactivitytype'] = '"{$a}" has been updated';

@@ -56,8 +56,6 @@ $PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new mood
 $PAGE->navbar->add(get_string('editactivity',  'local_apprenticeoffjob'));
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
-
-
 $editform = new \local_apprenticeoffjob\forms\activity();
 $formdata = [
     'id' => $activity->id,
@@ -97,4 +95,7 @@ $notify = new \core\output\notification((get_string('confirm', 'local_apprentice
 echo $OUTPUT->render($notify);
 
 $editform->display();
+$activitytypes = $DB->get_records_menu('local_apprenticeactivities', [], '', 'id,description');
+$PAGE->requires->js_call_amd('local_apprenticeoffjob/activitytypes', 'init', [$activitytypes]);
+
 echo $OUTPUT->footer();

@@ -53,6 +53,7 @@ class activity extends moodleform {
 
         $activitytypes = api::get_activitytypes();
         $activityoptions = [];
+        $activityoptions[] = 'Please select';
         foreach ($activitytypes as $type) {
             $activityoptions[$type->id] = $type->activityname;
         }
@@ -62,6 +63,9 @@ class activity extends moodleform {
 
         $mform->addElement('select', 'activitytype', get_string('activitytype', 'local_apprenticeoffjob'), $activityoptions);
         $mform->setType('activitytype', PARAM_INT);
+        $mform->addRule('activitytype', new lang_string('required'), 'required', null, 'client');
+        $mform->addRule('activitytype', new lang_string('required'), 'nonzero', null, 'client');
+        $mform->addRule('activitytype', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'server');
 
         $mform->addElement('date_selector', 'activitydate', get_string('activitydate', 'local_apprenticeoffjob'));
         $mform->setType('activitydate', PARAM_INT);
@@ -86,5 +90,21 @@ class activity extends moodleform {
         $mform->setType('activityupdate', PARAM_INT);
 
         $this->add_action_buttons();
+    }
+
+    /**
+     * Validate the fields we need to check.
+     *
+     * @param array $data
+     * @param array $files
+     * @return array Errors
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+        $activitytypes = api::get_activitytypes();
+        if (!isset($activitytypes[$data['activitytype']])) {
+            $errors['activitytype'] = get_string('invalidactivitytypeid', 'local_apprenticeoffjob');
+        }
+        return $errors;
     }
 }

@@ -68,4 +68,6 @@ $notify = new \core\output\notification((get_string('confirm', 'local_apprentice
 echo $OUTPUT->render($notify);
 
 $activityform->display();
+$activitytypes = $DB->get_records_menu('local_apprenticeactivities', [], '', 'id,description');
+$PAGE->requires->js_call_amd('local_apprenticeoffjob/activitytypes', 'init', [$activitytypes]);
 echo $OUTPUT->footer();

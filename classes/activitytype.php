@@ -14,16 +14,41 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_apprenticeoffjob;
+
+use core\persistent;
+
 /**
- * Display a user grade report for all courses
+ * Class activitytype
  *
  * @package    local_apprenticeoffjob
- * @copyright  2020 onwards Solent University
+ * @copyright  2024 Solent University {@link https://www.solent.ac.uk}
+ * @author Mark Sharp <mark.sharp@solent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class activitytype extends persistent {
+    /**
+     * Table name for activity types
+     */
+    const TABLE = 'local_apprenticeactivities';
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version  = 2024051501;
-$plugin->requires = 2018120304;
-$plugin->component = 'local_apprenticeoffjob';
+    /**
+     * Define properties for model
+     *
+     * @return array
+     */
+    protected static function define_properties(): array {
+        return [
+            'activityname' => [
+                'type' => PARAM_TEXT,
+            ],
+            'description' => [
+                'type' => PARAM_RAW,
+            ],
+            'status' => [
+                'type' => PARAM_BOOL,
+                'default' => false,
+            ],
+        ];
+    }
+}
