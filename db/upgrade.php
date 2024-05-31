@@ -45,7 +45,7 @@ function xmldb_local_apprenticeoffjob_upgrade($oldversion) {
 
         upgrade_plugin_savepoint(true, 2024051500, 'local', 'apprenticeoffjob');
     }
-    if ($oldversion < 2024051501) {
+    if ($oldversion < 2024051502) {
         $table = new xmldb_table('local_apprenticeactivities');
         $field = new xmldb_field('usermodified', XMLDB_TYPE_INTEGER, "10", true, true, null, 0);
         if (!$dbman->field_exists($table, $field)) {
@@ -59,7 +59,7 @@ function xmldb_local_apprenticeoffjob_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        upgrade_plugin_savepoint(true, 2024051501, 'local', 'apprenticeoffjob');
+        upgrade_plugin_savepoint(true, 2024051502, 'local', 'apprenticeoffjob');
     }
 
     return true;
