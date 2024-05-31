@@ -28,7 +28,7 @@ class local_apprenticeoffjob_generator extends component_generator_base {
     /**
      * Activity type counter
      *
-     * @var integer
+     * @var int
      */
     public $activitytypecount = 0;
 

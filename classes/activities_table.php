@@ -81,7 +81,7 @@ class activities_table {
     /**
      * Display the action column?
      *
-     * @var boolean
+     * @var bool
      */
     private $hasactioncol = false;
 
