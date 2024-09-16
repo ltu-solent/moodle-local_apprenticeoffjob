@@ -49,7 +49,8 @@ class api {
      * @return array
      */
     public static function get_apprentice_courses() {
-        global $DB, $USER;
+        global $CFG, $DB, $USER;
+        $graceperiod = $CFG->coursegraceperiodbefore;
         $now = time();
         $params = [];
         $unitpages = $DB->sql_like('cc.idnumber', ':unitcat', false, false);
@@ -57,8 +58,9 @@ class api {
         $coursepages = $DB->sql_like('cc.idnumber', ':coursecat', false, false);
         $params['coursecat'] = "courses_%";
         $params['userid'] = $USER->id;
-        $params['startdate'] = $now;
-        $params['timestart'] = $now;
+        // Include courses that start within 2 weeks.
+        $params['startdate'] = $now + (DAYSECS * $graceperiod);
+        $params['timestart'] = $now + (DAYSECS * $graceperiod);
         $sql = "SELECT DISTINCT e.courseid, c.shortname, c.fullname, c.startdate, c.enddate, cc.name categoryname
                                     FROM {enrol} e
                                     JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = :userid

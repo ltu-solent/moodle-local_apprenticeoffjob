@@ -46,6 +46,9 @@ class api_test extends advanced_testcase {
         $pastenddate = strtotime('2020-01-20');
         $futurestartdate = strtotime('+3 months');
         $futureenddate = strtotime('+6 months');
+        // Apply the graceperiod.
+        $future2startdate = strtotime('+13 days');
+        set_config('coursegraceperiodbefore', 14);
 
         $student1 = $this->getDataGenerator()->create_user();
         $student2 = $this->getDataGenerator()->create_user();
@@ -117,6 +120,21 @@ class api_test extends advanced_testcase {
             $student1->id,
             $courses['ABC102_456789123']->id,
             'student');
+
+        // Apply the graceperiod.
+        $courses['ABC103_45789123'] = $this->getDataGenerator()->create_course([
+            'fullname' => 'Module 3',
+            'shortname' => 'ABC103_45789123',
+            'idnumber' => 'ABC103_45789123',
+            'category' => $cats['courses/FSHSS/ModulePages']->id,
+            'startdate' => $future2startdate,
+            'enddate' => $futureenddate,
+        ]);
+        $this->getDataGenerator()->enrol_user(
+            $student1->id,
+            $courses['ABC103_45789123']->id,
+            'student'
+        );
 
         // Current courses.
         $cats['courses/FSHSS/CoursePages'] = $this->getDataGenerator()->create_category([
@@ -274,8 +292,8 @@ class api_test extends advanced_testcase {
         // Actual tests for Student1.
         $this->setUser($student1);
         $apprenticecourses = api::get_apprentice_courses();
-        // The count should be 6.
-        $this->assertCount(6, $apprenticecourses);
+        // The count should be 7 - including grace period.
+        $this->assertCount(7, $apprenticecourses);
         // Should be listed.
         $this->assertArrayHasKey($courses['ABC101_123456789']->id, $apprenticecourses);
         $this->assertArrayHasKey($courses['ABC102_123456789']->id, $apprenticecourses);
@@ -286,6 +304,8 @@ class api_test extends advanced_testcase {
         $this->assertArrayHasKey($courses['ABC102_234567891']->id, $apprenticecourses);
         // False archive - will be visible.
         $this->assertArrayHasKey($courses['ABC101_345678912']->id, $apprenticecourses);
+        // Grace period.
+        $this->assertArrayHasKey($courses['ABC103_45789123']->id, $apprenticecourses);
 
         // Suspended enrolment on an active module.
         $this->assertArrayNotHasKey($courses['ABC102_345678912']->id, $apprenticecourses);

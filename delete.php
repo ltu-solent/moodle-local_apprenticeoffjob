@@ -34,7 +34,6 @@ if (!isloggedin() || isguestuser()) {
 $activityid = required_param('id', PARAM_INT);
 $studentid = optional_param('studentid', 0, PARAM_INT);
 if ($studentid > 0 && $studentid != $USER->id) {
-    // TODO: Allow admins to delete activities.
     throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
 } else {
     $studentid = $USER->id;
