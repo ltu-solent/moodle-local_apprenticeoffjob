@@ -15,15 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display a user grade report for all courses
+ * External functions and service declaration for Apprentice off the job hours log
+ *
+ * Documentation: {@link https://moodledev.io/docs/apis/subsystems/external/description}
  *
  * @package    local_apprenticeoffjob
- * @copyright  2020 onwards Solent University
+ * @category   webservice
+ * @copyright  2024 Southampton Solent University {@link https://www.solent.ac.uk}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2024051504;
-$plugin->requires = 2018120304;
-$plugin->component = 'local_apprenticeoffjob';
+$functions = [
+    'local_apprenticeoffjob_search_courses' => [
+        'classname' => 'local_apprenticeoffjob\external\search_courses',
+        'description' => 'Search courses',
+        'type' => 'read',
+        'ajax'  => true,
+    ],
+];
+
+$services = [
+];

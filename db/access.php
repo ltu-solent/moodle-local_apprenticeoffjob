@@ -15,15 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display a user grade report for all courses
+ * Capability definitions for Apprentice off the job hours log
+ *
+ * Documentation: {@link https://moodledev.io/docs/apis/subsystems/access}
  *
  * @package    local_apprenticeoffjob
- * @copyright  2020 onwards Solent University
+ * @category   access
+ * @copyright  2024 Southampton Solent University {@link https://www.solent.ac.uk}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2024051504;
-$plugin->requires = 2018120304;
-$plugin->component = 'local_apprenticeoffjob';
+$capabilities = [
+    'local/apprenticeoffjob:manageuserdata' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+];
