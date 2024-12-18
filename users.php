@@ -31,7 +31,7 @@ require_login();
 $context = context_system::instance();
 $PAGE->set_context($context);
 require_capability('local/apprenticeoffjob:manageuserdata', $context);
-
+$download = optional_param('download', '', PARAM_ALPHA);
 $filters = [
     'selectedcourses' => [],
 ];
@@ -53,6 +53,10 @@ if (isset($filters['selectedcourses'])) {
 }
 $baseurl->params($sc);
 $PAGE->set_url($baseurl);
+$table = new users_table('apprenticeoffjob_users', $filters, $download);
+if ($table->is_downloading()) {
+    $table->download();
+}
 
 $PAGE->set_heading(get_string('apprenticeactivitiessummary', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
@@ -61,6 +65,6 @@ $PAGE->navbar->add(get_string('apprenticeactivitiessummary',  'local_apprenticeo
 echo $OUTPUT->header();
 
 $filterform->display();
-$table = new users_table('apprenticeoffjob_users', $filters);
+
 $table->out(100, true);
 echo $OUTPUT->footer();

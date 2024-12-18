@@ -136,6 +136,9 @@ class useractivities_table extends table_sql {
      * @return string HTML for cell
      */
     public function col_course($row): string {
+        if (is_null($row->course_fullname)) {
+            return '';
+        }
         if ($this->is_downloading()) {
             return $row->course_fullname;
         }

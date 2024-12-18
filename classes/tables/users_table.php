@@ -33,6 +33,7 @@ use table_sql;
  *
  * @package    local_apprenticeoffjob
  * @copyright  2024 Southampton Solent University {@link https://www.solent.ac.uk}
+ * @author Mark Sharp <mark.sharp@solent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class users_table extends table_sql {
@@ -42,8 +43,9 @@ class users_table extends table_sql {
      *
      * @param string $uniqueid
      * @param array $filters
+     * @param string $downloadformat
      */
-    public function __construct($uniqueid, array $filters = []) {
+    public function __construct($uniqueid, array $filters = [], string $downloadformat = '') {
         parent::__construct($uniqueid);
         $this->useridfield = 'userid';
         $columns = [
@@ -60,6 +62,8 @@ class users_table extends table_sql {
         $this->sortable(true, 'lastname', SORT_ASC);
         $this->pageable(true);
         $this->is_downloadable(true);
+        $sheetfilename = clean_filename('otjh-userlist-' . date('Ymd-His'));
+        $this->is_downloading($downloadformat, $sheetfilename, 'otjh-users');
         $this->sql = new stdClass();
         $this->sql->params = $filters;
         // Apply relevant filters.
@@ -116,6 +120,17 @@ class users_table extends table_sql {
      */
     public function col_lastactivity($row): string {
         return userdate($row->lastactivity, get_string('strftimedate', 'core_langconfig'));
+    }
+
+    /**
+     * Download
+     *
+     * @return void
+     */
+    public function download() {
+        \core\session\manager::write_close();
+        $this->out(0, false);
+        exit;
     }
 
     /**
@@ -210,12 +225,10 @@ class users_table extends table_sql {
         }
 
         $this->setup();
-        if (!$this->is_downloading()) {
-            [$wsql, $wparams] = $this->get_sql_where();
-            if ($wsql) {
-                $this->sql->filterwhere .= ' AND ' . $wsql;
-                $this->sql->params += $wparams;
-            }
+        [$wsql, $wparams] = $this->get_sql_where();
+        if ($wsql) {
+            $this->sql->filterwhere .= ' AND ' . $wsql;
+            $this->sql->params += $wparams;
         }
         $this->query_db($pagesize, $useinitialsbar);
         $this->build_table();
