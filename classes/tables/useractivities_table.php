@@ -95,6 +95,8 @@ class useractivities_table extends table_sql {
         $user = \core_user::get_user($params['userid']);
         $fullname = fullname($user);
         $sheetfilename = clean_filename('otjh-' . date('Ymd') . '-' . $fullname . '-' . s($user->idnumber));
+        $this->set_attribute('data-fullname', $fullname);
+        $this->set_attribute('data-userid', $user->id);
         $this->is_downloading($downloadformat, $sheetfilename, 'activities');
         $this->show_download_buttons_at([TABLE_P_BOTTOM, TABLE_P_TOP]);
 
@@ -157,13 +159,15 @@ class useractivities_table extends table_sql {
     public function col_select($row): string {
         global $OUTPUT;
         $row->activitydatestring = userdate($row->activitydate);
+        $name = 'activity' . $row->id;
         $checkbox = new \core\output\checkbox_toggleall($this->uniqueid, false, [
             'classes' => 'activitycheckbox m-1',
-            'id' => 'activity' . $row->id,
-            'name' => 'activity' . $row->id,
+            'id' => $name,
+            'name' => $name,
             'checked' => false,
             'label' => get_string('selectitem' , 'local_apprenticeoffjob', $row),
             'labelclasses' => 'accesshide',
+            'value' => $row->id,
         ]);
 
         return $OUTPUT->render($checkbox);
@@ -219,7 +223,7 @@ class useractivities_table extends table_sql {
         $data->showbulkactions = true;
 
         if ($data->showbulkactions) {
-            $data->id = 'formactionid';
+            $data->id = 'apprentice_activitiesbulkactions';
             $data->attributes = [
                 [
                     'name' => 'data-action',

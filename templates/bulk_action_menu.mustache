@@ -69,7 +69,7 @@
     {{#showbulkactions}}
     <div class="buttons float-left">
         <div class="form-inline pl-1">
-            <label for="{{id}}">{{#str}}withselectedusers{{/str}}</label>
+            <label for="{{id}}">{{#str}}withselectedactivities, local_apprenticeoffjob{{/str}}</label>
             <select id="{{id}}" class="select custom-select ml-4" {{#attributes}}{{name}}="{{value}}" {{/attributes}}>
                 <option value="">{{#str}}choosedots{{/str}}</option>
                 {{#actions}}
@@ -85,27 +85,3 @@
         {{/perpage}}
     </div>
 </div>
-
-{{#js}}
-require(['jquery', 'core_message/message_send_bulk', 'core/custom_interaction_events'], function($, BulkSender, CustomEvents) {
-    CustomEvents.define('#{{id}}', [CustomEvents.events.accessibleChange]);
-    $('#{{id}}').on(CustomEvents.events.accessibleChange, function(e) {
-        var action = $(e.target).val();
-        if (action.indexOf('#') !== -1) {
-            e.preventDefault();
-
-            var ids = $('#apprentice_useractivities_table input.activitycheckbox:checked').map(function(index, element) {
-                return element.name.replace('activity', '');
-            }).get();
-
-            if (action == '#deleteselect') {
-                BulkSender.showModal(ids, function() {
-                    $('#{{id}}').focus();
-                });
-            }
-
-            $('#{{id}} option[value=""]').prop('selected', 'selected');
-        }
-    });
-});
-{{/js}}

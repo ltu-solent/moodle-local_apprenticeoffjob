@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apprenticeoffjob\event\activities_downloaded;
+use local_apprenticeoffjob\event\log_viewed;
 use local_apprenticeoffjob\tables\useractivities_table;
 
 require('../../config.php');
@@ -50,11 +52,22 @@ $PAGE->navbar->add(
     $url
 );
 $PAGE->set_url($url);
+$PAGE->requires->js_call_amd('local_apprenticeoffjob/delete_activities_bulk', 'init');
 
 $table = new useractivities_table('apprenticeoffjob_useractivities', ['userid' => $userid], $download);
+$eventparams = [
+    'context' => context_user::instance($userid),
+    'relateduserid' => $apprentice->id,
+    'userid' => $USER->id,
+];
 if ($table->is_downloading()) {
+    $event = activities_downloaded::create($eventparams);
+    $event->trigger();
     $table->download();
 }
+
+$event = log_viewed::create($eventparams);
+$event->trigger();
 
 $PAGE->set_heading(get_string('otjhfor', 'local_apprenticeoffjob', fullname($apprentice)));
 echo $OUTPUT->header();

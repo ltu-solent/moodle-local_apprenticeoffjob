@@ -34,6 +34,13 @@ $functions = [
         'type' => 'read',
         'ajax'  => true,
     ],
+    'local_apprenticeoffjob_delete_activities' => [
+        'classname' => 'local_apprenticeoffjob\external\delete_activities',
+        'description' => 'Delete selected activities',
+        'type' => 'write',
+        'capabilities' => 'local/apprenticeoffjob:manageuserdata',
+        'ajax' => true,
+    ],
 ];
 
 $services = [

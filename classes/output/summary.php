@@ -25,6 +25,7 @@
 
 namespace local_apprenticeoffjob\output;
 
+use context_system;
 use context_user;
 use local_apprenticeoffjob\api;
 use moodle_url;
@@ -90,6 +91,15 @@ class summary implements renderable, templatable {
             $summary->newactivity->text = get_string('newactivity', 'local_apprenticeoffjob');
             $summary->newactivity->class = "btn btn-secondary";
             $summary->newactivity->id = "activitybutton";
+        }
+
+        if (has_capability('local/apprenticeoffjob:manageuserdata', context_system::instance())) {
+            $url = new moodle_url('/local/apprenticeoffjob/users.php');
+            $summary->manage = new stdClass();
+            $summary->manage->url = $url->out();
+            $summary->manage->text = get_string('managerecordedhours', 'local_apprenticeoffjob');
+            $summary->manage->class = 'btn btn-secondary';
+            $summary->manage->id = 'managerecordedhoursbutton';
         }
 
         $hoursleft = ($this->totalexpectedhours - $this->totalactualhours);

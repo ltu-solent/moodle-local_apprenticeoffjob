@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['actions'] = 'Actions';
+$string['activitiesdeleted'] = 'Activities deleted';
+$string['activitiesdownloaded'] = 'Activities downloaded';
 $string['activitycount'] = 'Activity count';
 $string['activitydate'] = 'Activity date';
 $string['activitydeleted'] = 'Activity deleted';
@@ -50,6 +52,7 @@ $string['commitmentstatement'] = '<span class="commitment">Commitment statement<
 $string['completedhours'] = '<p>Completed hours: {$a->completedhours}</p>';
 $string['completedhoursbreakdown'] = '<h3>Breakdown of completed hours</h3>';
 $string['confirm'] = 'I can confirm that the following activity was completed during my normal working hours (paid hours excluding overtime).';
+$string['confirmdelete'] = 'Confirm delete';
 $string['course'] = 'Course/module';
 $string['courseshortname'] = 'Course/module shortname';
 
@@ -59,6 +62,7 @@ $string['deleteactivity'] = 'Delete activity';
 $string['deleteconfirm'] = 'Are you sure you wish to delete this activity?';
 $string['deleteduser'] = 'User deleted';
 $string['deleteselect'] = 'Delete selected';
+$string['deletewarning'] = '<p><strong>This cannot be undone or recovered.</strong></p><p>You are about to delete {$a->n} activities for {$a->who}.</p>';
 $string['details'] = 'Details';
 $string['edit'] = 'Edit';
 $string['editactivity'] = 'Edit activity';
@@ -81,6 +85,7 @@ $string['lastmodified'] = 'Last modified';
 $string['logviewed'] = 'Log viewed';
 
 $string['manageactivitytypes'] = 'Manage activity types';
+$string['managerecordedhours'] = 'Manage recorded hours';
 $string['modifiedby'] = 'Modified by';
 
 $string['navigationlink'] = 'Apprentice off the job hours log (Student link)';
@@ -111,3 +116,5 @@ $string['sumtotalhours'] = 'Total hours';
 $string['totalhours'] = '<h3>Summary of hours</h3>';
 
 $string['updatedactivitytype'] = '"{$a}" has been updated';
+
+$string['withselectedactivities'] = 'With selected activities...';
