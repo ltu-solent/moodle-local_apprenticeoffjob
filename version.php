@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2024051505;
-$plugin->requires = 2018120304;
+$plugin->version  = 2025010700;
+$plugin->requires = 2022112800;
 $plugin->component = 'local_apprenticeoffjob';
+$plugin->supported = [401, 405];
