@@ -64,18 +64,17 @@ Feature: Manage activities
       | COURSE1 | student3 | Practical Training                      |
       | COURSE1 | student3 | Work Shadowing                          |
 
-
   Scenario: Access to the records page is restricted by permission
     Given I am logged in as "aadmin"
     When I visit "/local/apprenticeoffjob/index.php"
-    Then I should see "Manage recorded hours" 
+    Then I should see "Manage recorded hours"
     And I should see "New activity"
     And I should see "Print this page"
     When I follow "Manage recorded hours"
     Then I should see "Apprentice activities summary"
     When I am logged in as "student1"
     And I visit "/local/apprenticeoffjob/index.php"
-    Then I should not see "Manage recorded hours" 
+    Then I should not see "Manage recorded hours"
     And I should see "New activity"
     And I should see "Print this page"
     # I would like to visit users.php here, but it would throw an exception which would fail the test.
@@ -142,9 +141,3 @@ Feature: Manage activities
     And I wait until the page is ready
     Then I should see "Off the job hours for Student One"
     And I should see "Nothing to display"
-
-
-    
-
-
-        
