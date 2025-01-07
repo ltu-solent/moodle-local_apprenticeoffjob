@@ -24,6 +24,9 @@ use external_multiple_structure;
 use external_value;
 use local_apprenticeoffjob\event\activities_deleted;
 
+defined('MOODLE_INTERNAL') || die();
+require_once($CFG->dirroot . '/lib/externallib.php');
+
 /**
  * Class delete_activities
  *
