@@ -54,8 +54,8 @@ class search_courses extends external_api {
                 'query' => $query,
             ]
         );
-
-        $select = "SELECT c.id courseid, CONCAT(c.shortname, ': ', c.fullname) label FROM {course} c
+        $concat = $DB->sql_concat('c.shortname', "': '", 'c.fullname');
+        $select = "SELECT c.id courseid, {$concat} label FROM {course} c
             JOIN {local_apprentice} a ON a.course = c.id
         ";
         $wheres = [];
