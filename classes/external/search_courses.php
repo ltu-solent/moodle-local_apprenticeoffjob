@@ -22,6 +22,9 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 
+defined('MOODLE_INTERNAL') || die();
+require_once($CFG->dirroot . '/lib/externallib.php');
+
 /**
  * Class search_courses
  *
@@ -55,7 +58,7 @@ class search_courses extends external_api {
             ]
         );
         $concat = $DB->sql_concat('c.shortname', "': '", 'c.fullname');
-        $select = "SELECT c.id courseid, {$concat} label FROM {course} c
+        $select = "SELECT c.id courseid, " . $concat . " AS label FROM {course} c
             JOIN {local_apprentice} a ON a.course = c.id
         ";
         $wheres = [];
