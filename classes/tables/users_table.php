@@ -47,10 +47,10 @@ class users_table extends table_sql {
      */
     public function __construct($uniqueid, array $filters = [], string $downloadformat = '') {
         parent::__construct($uniqueid);
-        $this->useridfield = 'userid';
+        $this->useridfield = 'id';
         $this->set_attribute('id', $uniqueid . '_table');
         $columns = [
-            'userid' => 'id',
+            'id' => 'id',
             'fullname' => new lang_string('participant', 'local_apprenticeoffjob'),
             'activitycount' => new lang_string('activitycount', 'local_apprenticeoffjob'),
             'totalhours' => new lang_string('sumtotalhours', 'local_apprenticeoffjob'),
@@ -108,7 +108,7 @@ class users_table extends table_sql {
         }
         $name = fullname($row, has_capability('moodle/site:viewfullnames', $this->get_context()));
         return html_writer::link(
-            new moodle_url('/local/apprenticeoffjob/user.php', ['userid' => $row->userid]),
+            new moodle_url('/local/apprenticeoffjob/user.php', ['userid' => $row->id]),
             $name
         );
     }
@@ -245,12 +245,12 @@ class users_table extends table_sql {
     protected function define_base_sql(): void {
         $userfieldsapi = \core_user\fields::for_identity(context_system::instance(), false)->with_userpic();
         $userfieldssql = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
-        $this->sql->basefields = "a.userid, {$userfieldssql}, COUNT(a.userid) activitycount, SUM(a.activityhours) totalhours,
+        $this->sql->basefields = "{$userfieldssql}, COUNT(a.userid) activitycount, SUM(a.activityhours) totalhours,
             MAX(a.activitydate) lastactivity";
         $this->sql->basefromjoins = " {local_apprentice} a
             JOIN {user} u ON u.id = a.userid";
         $this->sql->basewhere = "1 = 1";
-        $this->sql->basegroupby = "a.userid";
+        $this->sql->basegroupby = "u.id";
     }
 
     /**
