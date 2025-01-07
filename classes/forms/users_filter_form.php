@@ -38,7 +38,7 @@ class users_filter_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('header', 'filterusersshdr', new lang_string('filterusers', 'local_apprenticeoffjob'));
+        $mform->addElement('header', 'filterusersshdr', new lang_string('filter'));
         $mform->setExpanded('filterusersshdr', true);
         $options = [
             'multiple' => true,

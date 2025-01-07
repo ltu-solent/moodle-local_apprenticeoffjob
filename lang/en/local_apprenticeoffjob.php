@@ -54,6 +54,7 @@ $string['completedhoursbreakdown'] = '<h3>Breakdown of completed hours</h3>';
 $string['confirm'] = 'I can confirm that the following activity was completed during my normal working hours (paid hours excluding overtime).';
 $string['confirmdelete'] = 'Confirm delete';
 $string['course'] = 'Course/module';
+$string['coursefilterwarning'] = 'Because you are filtering by courses/modules, the summary only counts the activities and hours for the selected courses/modules';
 $string['courseshortname'] = 'Course/module shortname';
 
 $string['date'] = 'Date';

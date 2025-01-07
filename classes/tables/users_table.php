@@ -48,6 +48,7 @@ class users_table extends table_sql {
     public function __construct($uniqueid, array $filters = [], string $downloadformat = '') {
         parent::__construct($uniqueid);
         $this->useridfield = 'userid';
+        $this->set_attribute('id', $uniqueid . '_table');
         $columns = [
             'userid' => 'id',
             'fullname' => new lang_string('participant', 'local_apprenticeoffjob'),

@@ -64,11 +64,15 @@ $formdata = [
     'activitydetails' => $activity->activitydetails,
     'activityhours' => $activity->activityhours,
     'activityupdate' => 1,
+    'userid' => $USER->id,
 ];
 $editform->set_data($formdata);
 if ($editform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $editform->get_data()) {
+    if ($USER->id != $formdata->userid) {
+        throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
+    }
     $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
     if ($saveactivity == true) {
         // Trigger a log viewed event.

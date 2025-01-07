@@ -44,6 +44,7 @@ class activity extends moodleform {
      * @return void
      */
     public function definition() {
+        global $USER;
         $mform = $this->_form;
         $courses = api::get_apprentice_courses();
         $courseoptions = [];
@@ -85,6 +86,9 @@ class activity extends moodleform {
 
         $mform->addElement('hidden', 'id', '');
         $mform->setType('id', PARAM_INT);
+
+        $mform->addElement('hidden', 'userid', $USER->id);
+        $mform->setType('userid', PARAM_INT);
 
         $mform->addElement('hidden', 'activityupdate', '');
         $mform->setType('activityupdate', PARAM_INT);

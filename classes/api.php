@@ -165,7 +165,7 @@ class api {
     public static function save_activity($formdata) {
         global $DB, $USER;
         $activity = new stdClass();
-        $activity->userid = $USER->id;
+        $activity->userid = $formdata->userid ?? $USER->id;
         $activity->course = $formdata->course;
         $activity->activitytype = intval($formdata->activitytype);
         $activity->activitydate = $formdata->activitydate;

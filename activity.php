@@ -45,6 +45,9 @@ $activityform = new \local_apprenticeoffjob\forms\activity(null, []);
 if ($activityform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {
+    if ($USER->id != $formdata->userid) {
+        throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
+    }
     $saveactivity = \local_apprenticeoffjob\api::save_activity($formdata);
     if (is_int($saveactivity)) {
         // Trigger an activity added event.

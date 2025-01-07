@@ -61,7 +61,7 @@ class local_apprenticeoffjob_generator extends component_generator_base {
     }
 
     /**
-     * Create a student activity log
+     * Create a student activity log.
      *
      * @param array $record
      * @return stdClass
@@ -74,6 +74,9 @@ class local_apprenticeoffjob_generator extends component_generator_base {
         }
         if (!isset($record['activitytype'])) {
             throw new moodle_exception('Activity type not set');
+        }
+        if (!isset($record['userid'])) {
+            throw new moodle_exception('User not set');
         }
         if (defined('BEHAT_TEST') && BEHAT_TEST) {
             $generator = behat_util::get_data_generator();

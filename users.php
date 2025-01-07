@@ -66,5 +66,9 @@ echo $OUTPUT->header();
 
 $filterform->display();
 
+if (isset($filters['selectedcourses']) && !empty($filters['selectedcourses'])) {
+    echo $OUTPUT->notification(get_string('coursefilterwarning', 'local_apprenticeoffjob'), 'info');
+}
+
 $table->out(100, true);
 echo $OUTPUT->footer();
