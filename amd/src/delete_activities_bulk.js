@@ -50,7 +50,7 @@ export const init = () => {
  * Register event listeners for bulk deleting
  */
 const registerEventListeners = () => {
-    document.querySelector(selectors.bulkActions).addEventListener('change', e => {
+    document.querySelector(selectors.bulkActions)?.addEventListener('change', e => {
         const action = e.target;
         if (action.value.indexOf('#') !== -1) {
             e.preventDefault();

@@ -21,6 +21,7 @@ use context_user;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
+use external_single_structure;
 use external_value;
 use local_apprenticeoffjob\event\activities_deleted;
 
@@ -88,7 +89,9 @@ class delete_activities extends external_api {
             $event = activities_deleted::create($eventparams);
             $event->trigger();
         }
-        return null;
+        return [
+            'result' => true,
+        ];
     }
 
     /**
@@ -96,7 +99,9 @@ class delete_activities extends external_api {
      *
      * @return void
      */
-    public static function execute_returns() {
-        return null;
+    public static function execute_returns(): external_single_structure {
+        return new external_single_structure([
+            'result' => new external_value(PARAM_BOOL, 'The processing result'),
+        ]);
     }
 }
