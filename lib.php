@@ -32,6 +32,9 @@
   * @return void
   */
 function local_apprenticeoffjob_extend_navigation_course($navigation, $course, $context) {
+    if (!get_capability_info('report/apprenticeoffjob:view')) {
+        return;
+    }
     if (has_capability('report/apprenticeoffjob:view', $context)) {
         $url = new moodle_url('/local/apprenticeoffjob/index.php');
         $navigation->add(
