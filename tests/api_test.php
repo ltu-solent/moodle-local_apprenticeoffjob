@@ -34,9 +34,14 @@ global $CFG;
  * @coversNothing
  * @group sol
  */
-class api_test extends advanced_testcase {
+final class api_test extends advanced_testcase {
 
-    public function test_get_apprentice_courses() {
+    /**
+     * Get course list for the user
+     *
+     * @return void
+     */
+    public function test_get_apprentice_courses(): void {
         $this->resetAfterTest();
         $cats = [];
         $courses = [];

@@ -75,9 +75,9 @@ $string['expectedhourstotal'] = '<p>Total expected hours: {$a->expectedhours}</p
 $string['filterusers'] = 'Filter users';
 
 $string['hours'] = 'Hours';
-$string['hoursleft'] = '<p>Hours left to complete: {$a->hoursleft}</p>';
 $string['hourshelp'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
 $string['hourshelp_help'] = 'Hours should be entered as decimals:<br>15 mins = 0.25 hours <br>30 mins = 0.5 hours<br> 45 mins = 0.75 hours';
+$string['hoursleft'] = '<p>Hours left to complete: {$a->hoursleft}</p>';
 
 $string['invalidactivitytypeid'] = 'Invalid activity type';
 
