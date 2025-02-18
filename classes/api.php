@@ -190,7 +190,7 @@ class api {
      * Delete activity
      *
      * @param object $formdata
-     * @return void
+     * @return bool
      */
     public static function delete_activity($formdata) {
         global $DB;
