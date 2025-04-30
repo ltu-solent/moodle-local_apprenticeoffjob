@@ -80,6 +80,7 @@ if ($editform->is_cancelled()) {
         $event = \local_apprenticeoffjob\event\activity_edited::create([
                     'context' => $usercontext,
                     'userid' => $USER->id,
+                    'objectid' => $formdata->id,
                     'other' => [
                         'activityid' => $formdata->id,
                     ],

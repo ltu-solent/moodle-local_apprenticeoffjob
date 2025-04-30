@@ -23,6 +23,7 @@ use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
+use local_apprenticeoffjob\api;
 use local_apprenticeoffjob\event\activities_deleted;
 
 defined('MOODLE_INTERNAL') || die();
@@ -75,8 +76,9 @@ class delete_activities extends external_api {
             $activityids = array_keys($activities);
             $count = count($activityids);
             // Delete activities.
-            [$insql, $inparams] = $DB->get_in_or_equal($activityids);
-            $DB->delete_records_select('local_apprentice', "id $insql", $inparams);
+            foreach ($activityids as $id) {
+                api::delete_activity($id);
+            }
             $usercontext = context_user::instance($userid);
             $eventparams = [
                 'userid' => $USER->id,

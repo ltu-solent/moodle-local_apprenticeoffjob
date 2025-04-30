@@ -60,19 +60,8 @@ $deleteform->set_data($formdata);
 if ($deleteform->is_cancelled()) {
     redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
 } else if ($formdata = $deleteform->get_data()) {
-    $deleteactivity = \local_apprenticeoffjob\api::delete_activity($formdata);
+    $deleteactivity = \local_apprenticeoffjob\api::delete_activity($activity->id);
     if ($deleteactivity == true) {
-        // Trigger a log viewed event.
-        $usercontext = context_user::instance($USER->id);
-        $event = \local_apprenticeoffjob\event\activity_deleted::create([
-                'context' => $usercontext,
-                'userid' => $USER->id,
-                'other' => [
-                    'activityid' => $formdata->id,
-                ],
-        ]);
-        $event->trigger();
-
         redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
     } else {
         redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php',

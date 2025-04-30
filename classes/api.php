@@ -25,6 +25,7 @@
 
 namespace local_apprenticeoffjob;
 
+use context_user;
 use core_date;
 use DateTime;
 use stdClass;
@@ -187,14 +188,53 @@ class api {
     }
 
     /**
+     * Get activity by id
+     *
+     * @param int $id
+     * @return stdClass
+     */
+    public static function get_activity($id): ?stdClass {
+        global $DB;
+        $sql = "SELECT a.id, a.userid, a.course, a.activitytype, atype.activityname, a.activitydate, a.activitydetails,
+            a.activityhours, a.timecreated, a.timemodified
+            FROM {local_apprentice} a
+            JOIN {local_apprenticeactivities} atype ON atype.id = a.activitytype
+            WHERE a.id = :id";
+        $activity = $DB->get_record_sql($sql, ['id' => $id]);
+        return $activity;
+    }
+
+    /**
      * Delete activity
      *
-     * @param object $formdata
+     * @param int $id
      * @return bool
      */
-    public static function delete_activity($formdata) {
-        global $DB;
-        $deleted = $DB->delete_records('local_apprentice', ['id' => $formdata->id]);
+    public static function delete_activity($id) {
+        global $DB, $USER;
+        $activity = self::get_activity($id);
+        if (!$activity) {
+            return false;
+        }
+        $deleted = $DB->delete_records('local_apprentice', ['id' => $id]);
+        if ($deleted) {
+            // Trigger deleted activity event.
+            $usercontext = context_user::instance($USER->id);
+            $eventdata = [
+                'context' => $usercontext,
+                'userid' => $USER->id,
+                'objectid' => $activity->id,
+                'relateduserid' => $activity->userid,
+                'other' => [
+                    'activityid' => $id,
+                    'activitytype' => $activity->activitytype,
+                    'activitydate' => $activity->activitydate,
+                    'activityhours' => $activity->activityhours,
+                ],
+            ];
+            $event = \local_apprenticeoffjob\event\activity_deleted::create($eventdata);
+            $event->trigger();
+        }
         return $deleted;
     }
 

@@ -55,6 +55,7 @@ if ($activityform->is_cancelled()) {
         $event = \local_apprenticeoffjob\event\activity_added::create([
                     'context' => $usercontext,
                     'userid' => $USER->id,
+                    'objectid' => $saveactivity,
                 ]);
         $event->trigger();
 
