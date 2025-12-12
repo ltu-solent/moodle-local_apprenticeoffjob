@@ -118,11 +118,13 @@ class api {
         global $DB;
         $hoursbyactivity = [];
         $totalhours = 0;
-        $hours = $DB->get_records_sql('SELECT r.id, r.activityid, r.hours, l.activityname
-                                        FROM {report_apprentice} r
-                                        JOIN {local_apprenticeactivities} l ON l.id = r.activityid
-                                        WHERE r.studentid = :studentid',
-                                        ['studentid' => $studentid]);
+        $hours = $DB->get_records_sql(
+            'SELECT r.id, r.activityid, r.hours, l.activityname
+            FROM {report_apprentice} r
+            JOIN {local_apprenticeactivities} l ON l.id = r.activityid
+            WHERE r.studentid = :studentid',
+            ['studentid' => $studentid]
+        );
 
         if (count($hours) > 0) {
             foreach ($hours as $h) {
@@ -264,14 +266,17 @@ class api {
     public static function get_filename($contextid) {
         global $DB;
 
-        $filename = $DB->get_field_select('files', 'filename',
+        $filename = $DB->get_field_select(
+            'files',
+            'filename',
             "contextid = :contextid
                 AND (filearea = :filearea AND filesize != :filesize)",
             [
                 'contextid' => $contextid,
                 'filearea' => 'apprenticeoffjob',
                 'filesize' => 0,
-            ]);
+            ]
+        );
         return $filename ?? '';
     }
 

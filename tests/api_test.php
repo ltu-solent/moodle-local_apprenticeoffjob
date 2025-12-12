@@ -35,7 +35,6 @@ global $CFG;
  * @group sol
  */
 final class api_test extends advanced_testcase {
-
     /**
      * Get course list for the user
      *
@@ -90,11 +89,13 @@ final class api_test extends advanced_testcase {
             'student',
             'manual',
             $currentstartdate,
-            $currenenddate);
+            $currenenddate
+        );
         $this->getDataGenerator()->enrol_user(
             $student2->id,
             $courses['ABC101_123456789']->id,
-            'student');
+            'student'
+        );
 
         $courses['ABC102_123456789'] = $this->getDataGenerator()->create_course([
             'fullname' => 'Module 2',
@@ -110,7 +111,8 @@ final class api_test extends advanced_testcase {
             'student',
             'manual',
             $currentstartdate,
-            $currenenddate);
+            $currenenddate
+        );
 
         // Future modules.
         $courses['ABC102_456789123'] = $this->getDataGenerator()->create_course([
@@ -124,7 +126,8 @@ final class api_test extends advanced_testcase {
         $this->getDataGenerator()->enrol_user(
             $student1->id,
             $courses['ABC102_456789123']->id,
-            'student');
+            'student'
+        );
 
         // Apply the graceperiod.
         $courses['ABC103_45789123'] = $this->getDataGenerator()->create_course([
@@ -160,7 +163,8 @@ final class api_test extends advanced_testcase {
             $courses['BAABC']->id,
             'student',
             'manual',
-            $paststartdate);
+            $paststartdate
+        );
 
         $courses['BABCD'] = $this->getDataGenerator()->create_course([
             'fullname' => 'BA Binocular Conversation Darwin (BABCD)',
@@ -175,7 +179,8 @@ final class api_test extends advanced_testcase {
             $courses['BABCD']->id,
             'student',
             'manual',
-            $paststartdate);
+            $paststartdate
+        );
 
         $courses['BACDE'] = $this->getDataGenerator()->create_course([
             'fullname' => 'BA Conversation Darwinian Environment (BACDE)',
@@ -189,7 +194,8 @@ final class api_test extends advanced_testcase {
             $courses['BACDE']->id,
             'student',
             'manual',
-            $paststartdate);
+            $paststartdate
+        );
 
         // Archived modules category structure.
         $cats['archive'] = $this->getDataGenerator()->create_category([
@@ -221,7 +227,8 @@ final class api_test extends advanced_testcase {
             'student',
             'manual',
             $paststartdate,
-            $pastenddate);
+            $pastenddate
+        );
 
         $courses['ABC102_234567891'] = $this->getDataGenerator()->create_course([
             'fullname' => 'Module 2',
@@ -237,7 +244,8 @@ final class api_test extends advanced_testcase {
             'student',
             'manual',
             $paststartdate,
-            $pastenddate);
+            $pastenddate
+        );
 
         // False archive. i.e. A Category idnumber like modules_current_2019 rather than modules_2019.
         $cats['courses/FSHSS/2019ModulePages'] = $this->getDataGenerator()->create_category([
@@ -259,7 +267,8 @@ final class api_test extends advanced_testcase {
             'student',
             'manual',
             $paststartdate,
-            $pastenddate);
+            $pastenddate
+        );
 
         // Suspended enrolment.
         $courses['ABC102_345678912'] = $this->getDataGenerator()->create_course([
@@ -277,7 +286,8 @@ final class api_test extends advanced_testcase {
             'manual',
             $currentstartdate,
             $currenenddate,
-            ENROL_USER_SUSPENDED);
+            ENROL_USER_SUSPENDED
+        );
 
         // Non-academic course page site pages.
         $cats['courses/services'] = $this->getDataGenerator()->create_category([

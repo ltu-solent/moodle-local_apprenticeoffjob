@@ -40,8 +40,12 @@ $pageparams = [
     'id' => $id,
 ];
 
-admin_externalpage_setup('local_apprenticeoffjob/manageactivitytypes', '',
-    $pageparams, '/local/apprenticeoffjob/manageactivitytypes.php');
+admin_externalpage_setup(
+    'local_apprenticeoffjob/manageactivitytypes',
+    '',
+    $pageparams,
+    '/local/apprenticeoffjob/manageactivitytypes.php'
+);
 $context = context_system::instance();
 
 $url = new moodle_url('/local/apprenticeoffjob/editactivitytype.php', []);
@@ -67,18 +71,22 @@ if ($formdata = $form->get_data()) {
     if (empty($formdata->id)) {
         $activitytype = new activitytype(0, $formdata);
         $activitytype->create();
-        redirect(new moodle_url('/local/apprenticeoffjob/manageactivitytypes.php'),
+        redirect(
+            new moodle_url('/local/apprenticeoffjob/manageactivitytypes.php'),
             get_string('newsavedactivitytype', 'local_apprenticeoffjob'),
             null,
-            \core\output\notification::NOTIFY_SUCCESS);
+            \core\output\notification::NOTIFY_SUCCESS
+        );
     }
     $activitytype = new activitytype($formdata->id);
     $activitytype->from_record($formdata);
     $activitytype->update();
-    redirect(new moodle_url('/local/apprenticeoffjob/manageactivitytypes.php'),
+    redirect(
+        new moodle_url('/local/apprenticeoffjob/manageactivitytypes.php'),
         get_string('updatedactivitytype', 'local_apprenticeoffjob', $formdata->activityname),
         null,
-        \core\output\notification::NOTIFY_SUCCESS);
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 $heading = get_string('editactivitytype', 'local_apprenticeoffjob');

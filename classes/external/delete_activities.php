@@ -56,7 +56,8 @@ class delete_activities extends external_api {
      */
     public static function execute($activityids) {
         global $DB, $USER;
-        $params = self::validate_parameters(self::execute_parameters(),
+        $params = self::validate_parameters(
+            self::execute_parameters(),
             [
                 'activityids' => $activityids,
             ]

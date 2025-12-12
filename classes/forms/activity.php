@@ -37,7 +37,6 @@ use moodleform;
  * Activity form filled out by student
  */
 class activity extends moodleform {
-
     /**
      * Field definitions for form
      *
@@ -72,13 +71,17 @@ class activity extends moodleform {
         $mform->setType('activitydate', PARAM_INT);
 
         $textareaoptions = ['cols' => 60, 'rows' => 10, 'style' => 'resize: both;'];
-        $mform->addElement('textarea', 'activitydetails', get_string('activitydetails', 'local_apprenticeoffjob'),
-            $textareaoptions);
-        $mform->setType('activitydetails', PARAM_TEXT );
+        $mform->addElement(
+            'textarea',
+            'activitydetails',
+            get_string('activitydetails', 'local_apprenticeoffjob'),
+            $textareaoptions
+        );
+        $mform->setType('activitydetails', PARAM_TEXT);
         $mform->addRule('activitydetails', new lang_string('required'), 'required', null, 'client');
         $mform->addHelpButton('activitydetails', 'activitydetailshelp', 'local_apprenticeoffjob');
 
-        $mform->addElement('text', 'activityhours', get_string('activityhours',  'local_apprenticeoffjob'));
+        $mform->addElement('text', 'activityhours', get_string('activityhours', 'local_apprenticeoffjob'));
         $mform->setType('activityhours', PARAM_RAW);
         $mform->addRule('activityhours', new lang_string('required'), 'required', null, 'client');
         $mform->addRule('activityhours', get_string('errnumeric', 'local_apprenticeoffjob'), 'numeric', null, 'client', 1, 0);

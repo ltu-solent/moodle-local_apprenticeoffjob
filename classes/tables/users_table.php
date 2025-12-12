@@ -37,7 +37,6 @@ use table_sql;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class users_table extends table_sql {
-
     /**
      * Constructor for table
      *

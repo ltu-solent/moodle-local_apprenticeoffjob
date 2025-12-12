@@ -60,8 +60,8 @@ if ($table->is_downloading()) {
 
 $PAGE->set_heading(get_string('apprenticeactivitiessummary', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
-$PAGE->navbar->add(get_string('apprenticeactivitiessummary',  'local_apprenticeoffjob'), $baseurl);
+$PAGE->navbar->add(get_string('pluginname', 'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
+$PAGE->navbar->add(get_string('apprenticeactivitiessummary', 'local_apprenticeoffjob'), $baseurl);
 echo $OUTPUT->header();
 
 $filterform->display();

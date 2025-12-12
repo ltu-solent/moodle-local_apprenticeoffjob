@@ -165,7 +165,7 @@ class useractivities_table extends table_sql {
             'id' => $name,
             'name' => $name,
             'checked' => false,
-            'label' => get_string('selectitem' , 'local_apprenticeoffjob', $row),
+            'label' => get_string('selectitem', 'local_apprenticeoffjob', $row),
             'labelclasses' => 'accesshide',
             'value' => $row->id,
         ]);

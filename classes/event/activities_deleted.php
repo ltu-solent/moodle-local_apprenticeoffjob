@@ -26,7 +26,6 @@ use moodle_url;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class activities_deleted extends \core\event\base {
-
     /**
      * Set basic properties for the event.
      */

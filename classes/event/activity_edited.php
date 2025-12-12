@@ -34,7 +34,6 @@ namespace local_apprenticeoffjob\event;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class activity_edited extends \core\event\base {
-
     /**
      * Init method.
      *
@@ -52,7 +51,7 @@ class activity_edited extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id ".$this->userid." edited activity with id ". $this->other['activityid'].".";
+        return "The user with id " . $this->userid . " edited activity with id " . $this->other['activityid'] . ".";
     }
 
     /**
@@ -72,5 +71,4 @@ class activity_edited extends \core\event\base {
     public function get_url() {
         return new \moodle_url('/local/apprenticeoffjob/edit.php', ['id' => $this->other['activityid']]);
     }
-
 }

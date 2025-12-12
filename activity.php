@@ -27,7 +27,7 @@ require_login();
 
 if (!isloggedin() || isguestuser()) {
     if (empty($SESSION->wantsurl)) {
-        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/activity.php';
+        $SESSION->wantsurl = $CFG->wwwroot . '/local/apprenticeoffjob/activity.php';
     }
     redirect(get_login_url());
 }
@@ -37,13 +37,13 @@ $PAGE->set_url('/local/apprenticeoffjob/activity.php');
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
-$PAGE->navbar->add(get_string('newactivity',  'local_apprenticeoffjob'));
+$PAGE->navbar->add(get_string('pluginname', 'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
+$PAGE->navbar->add(get_string('newactivity', 'local_apprenticeoffjob'));
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
 $activityform = new \local_apprenticeoffjob\forms\activity(null, []);
 if ($activityform->is_cancelled()) {
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php');
+    redirect($CFG->wwwroot . '/local/apprenticeoffjob/index.php');
 } else if ($formdata = $activityform->get_data()) {
     if ($USER->id != $formdata->userid) {
         throw new moodle_exception('noeditpermissions', 'local_apprenticeoffjob');
@@ -59,16 +59,18 @@ if ($activityform->is_cancelled()) {
                 ]);
         $event->trigger();
 
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
+        redirect($CFG->wwwroot . '/local/apprenticeoffjob/index.php', get_string('activitysaved', 'local_apprenticeoffjob'), 15);
     } else {
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
+        redirect($CFG->wwwroot . '/local/apprenticeoffjob/index.php', get_string('activitynotsaved', 'local_apprenticeoffjob'), 15);
     }
 }
 
 echo $OUTPUT->header();
 
-$notify = new \core\output\notification((get_string('confirm', 'local_apprenticeoffjob')),
-                \core\output\notification::NOTIFY_WARNING);
+$notify = new \core\output\notification(
+    get_string('confirm', 'local_apprenticeoffjob'),
+    \core\output\notification::NOTIFY_WARNING
+);
 echo $OUTPUT->render($notify);
 
 $activityform->display();

@@ -35,7 +35,6 @@ use moodle_url;
  * Activities table displays all student's recorded activities.
  */
 class activities_table {
-
     /**
      * List of activity objects
      *
@@ -134,7 +133,7 @@ class activities_table {
      */
     private function assemble() {
         foreach ($this->activitytypes as $actkey => $actname) {
-            $activities = array_filter($this->activities, function($activity) use ($actkey) {
+            $activities = array_filter($this->activities, function ($activity) use ($actkey) {
                 return $activity->activitytype == $actkey;
             });
             $this->table->data[] = $this->activitytyperow($actkey);

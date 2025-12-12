@@ -26,7 +26,7 @@ require('../../config.php');
 require_login();
 if (!isloggedin() || isguestuser()) {
     if (empty($SESSION->wantsurl)) {
-        $SESSION->wantsurl = $CFG->wwwroot.'/local/apprenticeoffjob/index.php';
+        $SESSION->wantsurl = $CFG->wwwroot . '/local/apprenticeoffjob/index.php';
     }
     redirect(get_login_url());
 }
@@ -46,8 +46,8 @@ $PAGE->set_url('/local/apprenticeoffjob/delete.php', ['id' => $activityid]);
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('pluginname', 'local_apprenticeoffjob'));
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('pluginname',  'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
-$PAGE->navbar->add(get_string('deleteactivity',  'local_apprenticeoffjob'));
+$PAGE->navbar->add(get_string('pluginname', 'local_apprenticeoffjob'), new moodle_url('/local/apprenticeoffjob/'));
+$PAGE->navbar->add(get_string('deleteactivity', 'local_apprenticeoffjob'));
 
 $PAGE->set_heading(fullname($USER) . ' - ' . get_string('pluginname', 'local_apprenticeoffjob'));
 
@@ -58,14 +58,17 @@ $deleteform = new \local_apprenticeoffjob\forms\delete(null, ['activity' => $act
 $formdata = ['id' => $activity->id];
 $deleteform->set_data($formdata);
 if ($deleteform->is_cancelled()) {
-    redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', '', 0);
+    redirect($CFG->wwwroot . '/local/apprenticeoffjob/index.php', '', 0);
 } else if ($formdata = $deleteform->get_data()) {
     $deleteactivity = \local_apprenticeoffjob\api::delete_activity($activity->id);
     if ($deleteactivity == true) {
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
+        redirect($CFG->wwwroot . '/local/apprenticeoffjob/index.php', get_string('activitydeleted', 'local_apprenticeoffjob'), 15);
     } else {
-        redirect($CFG->wwwroot. '/local/apprenticeoffjob/index.php',
-            get_string('activitynotdeleted', 'local_apprenticeoffjob'), 15);
+        redirect(
+            $CFG->wwwroot . '/local/apprenticeoffjob/index.php',
+            get_string('activitynotdeleted', 'local_apprenticeoffjob'),
+            15
+        );
     }
 }
 

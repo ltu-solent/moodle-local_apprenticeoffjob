@@ -37,10 +37,12 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_heading(get_string('manageactivitytypes', 'local_apprenticeoffjob'));
 echo $OUTPUT->header();
 
-$new = new action_link(new moodle_url('/local/apprenticeoffjob/editactivitytype.php', ['action' => 'new']),
+$new = new action_link(
+    new moodle_url('/local/apprenticeoffjob/editactivitytype.php', ['action' => 'new']),
     get_string('newactivitytype', 'local_apprenticeoffjob'),
     null,
-    ['class' => 'btn btn-primary']);
+    ['class' => 'btn btn-primary']
+);
 
 echo $OUTPUT->render($new);
 

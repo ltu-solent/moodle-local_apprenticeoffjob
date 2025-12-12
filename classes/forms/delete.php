@@ -44,9 +44,9 @@ class delete extends moodleform {
         global $OUTPUT;
         $mform = $this->_form;
         $mform->addElement('html', $OUTPUT->notification(get_string('deleteconfirm', 'local_apprenticeoffjob')));
-        $mform->addElement('html', '<p>Date: ' . $this->_customdata['activity']->activitydate. '</p>');
-        $mform->addElement('html', '<p>Details: ' . $this->_customdata['activity']->activitydetails. '</p>');
-        $mform->addElement('html', '<p>Hours: ' . $this->_customdata['activity']->activityhours. '</p>');
+        $mform->addElement('html', '<p>Date: ' . $this->_customdata['activity']->activitydate . '</p>');
+        $mform->addElement('html', '<p>Details: ' . $this->_customdata['activity']->activitydetails . '</p>');
+        $mform->addElement('html', '<p>Hours: ' . $this->_customdata['activity']->activityhours . '</p>');
         $mform->addElement('hidden', 'id', $this->_customdata['activity']->id);
         $mform->setType('id', PARAM_INT);
 

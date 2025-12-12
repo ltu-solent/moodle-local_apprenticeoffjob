@@ -39,11 +39,11 @@ $apprentice = core_user::get_user($userid, '*', MUST_EXIST);
 
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(
-    get_string('pluginname',  'local_apprenticeoffjob'),
+    get_string('pluginname', 'local_apprenticeoffjob'),
     new moodle_url('/local/apprenticeoffjob/')
 );
 $PAGE->navbar->add(
-    get_string('apprenticeactivitiessummary',  'local_apprenticeoffjob'),
+    get_string('apprenticeactivitiessummary', 'local_apprenticeoffjob'),
     new moodle_url('/local/apprenticeoffjob/users.php')
 );
 $url = new moodle_url('/local/apprenticeoffjob/user.php', ['userid' => $userid]);

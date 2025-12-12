@@ -33,7 +33,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class activity_added extends \core\event\base {
-
     /**
      * Init method.
      *
@@ -71,5 +70,4 @@ class activity_added extends \core\event\base {
     public function get_url() {
         return new \moodle_url('/local/apprenticeoffjob/activity.php', []);
     }
-
 }

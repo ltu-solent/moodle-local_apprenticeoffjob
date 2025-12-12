@@ -44,16 +44,19 @@ class users_filter_form extends moodleform {
             'multiple' => true,
             'noselectionstring' => get_string('noselection', 'local_apprenticeoffjob'),
             'ajax' => 'local_apprenticeoffjob/form-course-selector',
-            'valuehtmlcallback' => function($value) {
+            'valuehtmlcallback' => function ($value) {
                 global $DB;
                 $course = $DB->get_record('course', ['id' => $value]);
                 return $course->shortname . ': ' . $course->fullname;
             },
         ];
-        $mform->addElement('autocomplete', 'selectedcourses',
+        $mform->addElement(
+            'autocomplete',
+            'selectedcourses',
             new lang_string('selectcourses', 'local_apprenticeoffjob'),
             [],
-            $options);
+            $options
+        );
         $mform->setDefault('selectedcourses', []);
 
         // Add in option to select by date range.

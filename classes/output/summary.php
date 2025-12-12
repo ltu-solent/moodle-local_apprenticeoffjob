@@ -77,10 +77,14 @@ class summary implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $USER;
         $summary = new stdClass();
-        $notify1 = new \core\output\notification((get_string('statement1', 'local_apprenticeoffjob')),
-                        \core\output\notification::NOTIFY_WARNING);
-        $notify2 = new \core\output\notification((get_string('statement3', 'local_apprenticeoffjob')),
-                        \core\output\notification::NOTIFY_WARNING);
+        $notify1 = new \core\output\notification(
+            get_string('statement1', 'local_apprenticeoffjob'),
+            \core\output\notification::NOTIFY_WARNING
+        );
+        $notify2 = new \core\output\notification(
+            get_string('statement3', 'local_apprenticeoffjob'),
+            \core\output\notification::NOTIFY_WARNING
+        );
         $summary->notify1 = $notify1->export_for_template($output);
         $summary->notify2 = $notify2->export_for_template($output);
 
