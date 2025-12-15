@@ -30,4 +30,4 @@ $plugin->component = 'local_apprenticeoffjob';
 $plugin->dependencies = [
     'report_apprenticeoffjob' => 2025010700,
 ];
-$plugin->supported = [401, 405];
+$plugin->supported = [405, 501];
