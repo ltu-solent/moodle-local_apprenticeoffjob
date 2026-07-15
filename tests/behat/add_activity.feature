@@ -184,6 +184,7 @@ Feature: Record offjob activities
     | id_activityhours      | 1.5                                    |
     When I press "Save changes"
     Then I should see "Completed hours: 12"
+    And I should see "Activity saved"
     And I should see "Hours left to complete: 28"
     And I should see "0.50/10" in the ".activity-practical-training" "css_element"
     And "module-1-practical-training-2023-03-02" "table_row" should not exist
@@ -199,3 +200,18 @@ Feature: Record offjob activities
     And I should see "Hours left to complete: 29.5"
     And I should see "1.00/10" in the ".activity-teaching-of-theory" "css_element"
     And "module-1-teaching-of-theory-2023-03-02" "table_row" should not exist
+
+  @javascript
+  Scenario: Student is not enrolled on any qualifying pages
+    Given the following "users" exist:
+    | username | firstname | lastname | email          | department |
+    | student2 | Student   | Two      | s2@example.com | student    |
+    And I am logged in as "student2"
+    And I visit "/local/apprenticeoffjob/index.php"
+    When I follow "New activity"
+    Then I should see "You are not enrolled on any qualifying courses or modules. Please contact your course leader."
+    And the "Course/module" select box should not contain "Module 1"
+    And the "Course/module" select box should not contain "Course 1"
+    And the "Course/module" select box should not contain "Course 2"
+    When I press "Save changes"
+    Then I should not see "Activity saved"

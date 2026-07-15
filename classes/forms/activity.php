@@ -50,6 +50,10 @@ class activity extends moodleform {
         foreach ($courses as $c) {
             $courseoptions[$c->courseid] = $c->fullname;
         }
+        $hascourses = count($courseoptions) > 0;
+        if (!$hascourses) {
+            $mform->addElement('warning', 'nocourses', 'notifywarning', get_string('nocourses', 'local_apprenticeoffjob'));
+        }
 
         $activitytypes = api::get_activitytypes();
         $activityoptions = [];
@@ -60,6 +64,8 @@ class activity extends moodleform {
 
         $mform->addElement('select', 'course', get_string('course', 'local_apprenticeoffjob'), $courseoptions);
         $mform->setType('course', PARAM_INT);
+        // This will prevent form submission if no course/module is selected.
+        $mform->addRule('course', new lang_string('required'), 'required', null, 'client');
 
         $mform->addElement('select', 'activitytype', get_string('activitytype', 'local_apprenticeoffjob'), $activityoptions);
         $mform->setType('activitytype', PARAM_INT);

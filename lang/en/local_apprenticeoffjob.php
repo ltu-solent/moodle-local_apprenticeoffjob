@@ -93,6 +93,7 @@ $string['navigationlink'] = 'Apprentice off the job hours log (Student link)';
 $string['newactivity'] = 'New activity';
 $string['newactivitytype'] = 'New activity type';
 $string['newsavedactivitytype'] = 'New activity type created';
+$string['nocourses'] = 'You are not enrolled on any qualifying courses or modules. Please contact your course leader.';
 $string['noeditpermissions'] = 'You do not have permissions to edit this activity.';
 $string['nonerecorded'] = 'None recorded';
 $string['nopermission'] = 'You do not have permission to do that.';
