@@ -43,7 +43,7 @@ class activity extends moodleform {
      * @return void
      */
     public function definition() {
-        global $USER;
+        global $CFG, $USER;
         $mform = $this->_form;
         $courses = api::get_apprentice_courses();
         $courseoptions = [];
@@ -52,7 +52,13 @@ class activity extends moodleform {
         }
         $hascourses = count($courseoptions) > 0;
         if (!$hascourses) {
-            $mform->addElement('warning', 'nocourses', 'notifywarning', get_string('nocourses', 'local_apprenticeoffjob'));
+            $days = $CFG->coursegraceperiodbefore ?? 0;
+            $mform->addElement(
+                'warning',
+                'nocourses',
+                'notifywarning',
+                get_string('nocourses', 'local_apprenticeoffjob', ['days' => $days])
+            );
         }
 
         $activitytypes = api::get_activitytypes();
